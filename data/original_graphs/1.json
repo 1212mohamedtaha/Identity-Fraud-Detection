@@ -1,0 +1,1473 @@
+{
+  "nodes": [
+    "Information Technology Institute Mansoura Branch",
+    "جامعة السويس",
+    "شارع الجزائر تقسيم2 كفرالشيخ",
+    "مدينة كفرالشيخ",
+    "BANK MISR",
+    "مكتب تموين جمعيتي",
+    "مركز براعم للاطفال",
+    "Miramar Cafe",
+    "فر ع جامعة المنصورة",
+    "منصة مكوك للمتاجر الالكترونية",
+    "كارفور ماركت",
+    "Elaf Egypt",
+    "كافتيريا ومطعم نيولوك &",
+    "Cinema Galaxy",
+    "Banque Misr",
+    "سوبر ماركت الربيع",
+    "أسواق الشيتانى",
+    "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+    "ابوعبده",
+    "دار عرض سينما الجمهورية",
+    "Nasser Social Bank - NSB",
+    "سليم ماركت",
+    "اسواق عباد الرحمن",
+    "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+    "مطبخنا الحديث",
+    "Zombie VR"
+  ],
+  "personal_nodes": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "personal_information": {
+    "company": 0,
+    "university": 1,
+    "live_in": 2,
+    "born_in": 3
+  },
+  "node2idx": {
+    "Information Technology Institute Mansoura Branch": 0,
+    "جامعة السويس": 1,
+    "شارع الجزائر تقسيم2 كفرالشيخ": 2,
+    "مدينة كفرالشيخ": 3,
+    "BANK MISR": 4,
+    "مكتب تموين جمعيتي": 5,
+    "مركز براعم للاطفال": 6,
+    "Miramar Cafe": 7,
+    "فر ع جامعة المنصورة": 8,
+    "منصة مكوك للمتاجر الالكترونية": 9,
+    "كارفور ماركت": 10,
+    "Elaf Egypt": 11,
+    "كافتيريا ومطعم نيولوك &": 12,
+    "Cinema Galaxy": 13,
+    "Banque Misr": 14,
+    "سوبر ماركت الربيع": 15,
+    "أسواق الشيتانى": 16,
+    "مستشفى صندلا المركزى.. Central Hospital of Sundela": 17,
+    "ابوعبده": 18,
+    "دار عرض سينما الجمهورية": 19,
+    "Nasser Social Bank - NSB": 20,
+    "سليم ماركت": 21,
+    "اسواق عباد الرحمن": 22,
+    "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة": 23,
+    "مطبخنا الحديث": 24,
+    "Zombie VR": 25
+  },
+  "idx2node": {
+    "0": "Information Technology Institute Mansoura Branch",
+    "1": "جامعة السويس",
+    "2": "شارع الجزائر تقسيم2 كفرالشيخ",
+    "3": "مدينة كفرالشيخ",
+    "4": "BANK MISR",
+    "5": "مكتب تموين جمعيتي",
+    "6": "مركز براعم للاطفال",
+    "7": "Miramar Cafe",
+    "8": "فر ع جامعة المنصورة",
+    "9": "منصة مكوك للمتاجر الالكترونية",
+    "10": "كارفور ماركت",
+    "11": "Elaf Egypt",
+    "12": "كافتيريا ومطعم نيولوك &",
+    "13": "Cinema Galaxy",
+    "14": "Banque Misr",
+    "15": "سوبر ماركت الربيع",
+    "16": "أسواق الشيتانى",
+    "17": "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+    "18": "ابوعبده",
+    "19": "دار عرض سينما الجمهورية",
+    "20": "Nasser Social Bank - NSB",
+    "21": "سليم ماركت",
+    "22": "اسواق عباد الرحمن",
+    "23": "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+    "24": "مطبخنا الحديث",
+    "25": "Zombie VR"
+  },
+  "edges": [
+    [
+      "BANK MISR",
+      "Bank",
+      "جامعة السويس"
+    ],
+    [
+      "مكتب تموين جمعيتي",
+      "supermarket",
+      "جامعة السويس"
+    ],
+    [
+      "مركز براعم للاطفال",
+      "hospital",
+      "جامعة السويس"
+    ],
+    [
+      "Miramar Cafe",
+      "Dinning room",
+      "جامعة السويس"
+    ],
+    [
+      "فر ع جامعة المنصورة",
+      "Bank",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "منصة مكوك للمتاجر الالكترونية",
+      "Convenience store",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "كارفور ماركت",
+      "supermarket",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "Elaf Egypt",
+      "hospital",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "كافتيريا ومطعم نيولوك &",
+      "Dinning room",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "Cinema Galaxy",
+      "Cinema",
+      "Information Technology Institute Mansoura Branch"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "سوبر ماركت الربيع",
+      "Convenience store",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "مدينة كفرالشيخ"
+    ],
+    [
+      "Nasser Social Bank - NSB",
+      "Bank",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "سليم ماركت",
+      "Convenience store",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "اسواق عباد الرحمن",
+      "supermarket",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+      "hospital",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "مطبخنا الحديث",
+      "Dinning room",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "Zombie VR",
+      "Cinema",
+      "شارع الجزائر تقسيم2 كفرالشيخ"
+    ],
+    [
+      "Miramar Cafe",
+      "Dinning room",
+      "مكتب تموين جمعيتي"
+    ],
+    [
+      "مكتب تموين جمعيتي",
+      "supermarket",
+      "Miramar Cafe"
+    ],
+    [
+      "كارفور ماركت",
+      "supermarket",
+      "فر ع جامعة المنصورة"
+    ],
+    [
+      "كافتيريا ومطعم نيولوك &",
+      "Dinning room",
+      "فر ع جامعة المنصورة"
+    ],
+    [
+      "كافتيريا ومطعم نيولوك &",
+      "Dinning room",
+      "منصة مكوك للمتاجر الالكترونية"
+    ],
+    [
+      "فر ع جامعة المنصورة",
+      "Bank",
+      "كارفور ماركت"
+    ],
+    [
+      "Elaf Egypt",
+      "hospital",
+      "كارفور ماركت"
+    ],
+    [
+      "كافتيريا ومطعم نيولوك &",
+      "Dinning room",
+      "كارفور ماركت"
+    ],
+    [
+      "كارفور ماركت",
+      "supermarket",
+      "Elaf Egypt"
+    ],
+    [
+      "Cinema Galaxy",
+      "Cinema",
+      "Elaf Egypt"
+    ],
+    [
+      "فر ع جامعة المنصورة",
+      "Bank",
+      "كافتيريا ومطعم نيولوك &"
+    ],
+    [
+      "منصة مكوك للمتاجر الالكترونية",
+      "Convenience store",
+      "كافتيريا ومطعم نيولوك &"
+    ],
+    [
+      "كارفور ماركت",
+      "supermarket",
+      "كافتيريا ومطعم نيولوك &"
+    ],
+    [
+      "Elaf Egypt",
+      "hospital",
+      "Cinema Galaxy"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "Banque Misr"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "Banque Misr"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "Banque Misr"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "Banque Misr"
+    ],
+    [
+      "Zombie VR",
+      "Cinema",
+      "Banque Misr"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "سوبر ماركت الربيع"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "سوبر ماركت الربيع"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "سوبر ماركت الربيع"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "أسواق الشيتانى"
+    ],
+    [
+      "سوبر ماركت الربيع",
+      "Convenience store",
+      "أسواق الشيتانى"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "أسواق الشيتانى"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "أسواق الشيتانى"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "أسواق الشيتانى"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+    ],
+    [
+      "سوبر ماركت الربيع",
+      "Convenience store",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "ابوعبده"
+    ],
+    [
+      "سوبر ماركت الربيع",
+      "Convenience store",
+      "ابوعبده"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "ابوعبده"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "ابوعبده"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "ابوعبده"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "أسواق الشيتانى",
+      "supermarket",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "hospital",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "ابوعبده",
+      "Dinning room",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "Nasser Social Bank - NSB",
+      "Bank",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "Zombie VR",
+      "Cinema",
+      "دار عرض سينما الجمهورية"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "Nasser Social Bank - NSB"
+    ],
+    [
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+      "hospital",
+      "Nasser Social Bank - NSB"
+    ],
+    [
+      "Zombie VR",
+      "Cinema",
+      "Nasser Social Bank - NSB"
+    ],
+    [
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+      "hospital",
+      "اسواق عباد الرحمن"
+    ],
+    [
+      "مطبخنا الحديث",
+      "Dinning room",
+      "اسواق عباد الرحمن"
+    ],
+    [
+      "Nasser Social Bank - NSB",
+      "Bank",
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+    ],
+    [
+      "اسواق عباد الرحمن",
+      "supermarket",
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+    ],
+    [
+      "مطبخنا الحديث",
+      "Dinning room",
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+    ],
+    [
+      "اسواق عباد الرحمن",
+      "supermarket",
+      "مطبخنا الحديث"
+    ],
+    [
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+      "hospital",
+      "مطبخنا الحديث"
+    ],
+    [
+      "Banque Misr",
+      "Bank",
+      "Zombie VR"
+    ],
+    [
+      "دار عرض سينما الجمهورية",
+      "Cinema",
+      "Zombie VR"
+    ],
+    [
+      "Nasser Social Bank - NSB",
+      "Bank",
+      "Zombie VR"
+    ]
+  ],
+  "edge_se_freqs": [
+    75,
+    70,
+    96,
+    41,
+    55,
+    27,
+    76,
+    5,
+    46,
+    48,
+    56,
+    75,
+    36,
+    44,
+    49,
+    3,
+    60,
+    38,
+    54,
+    55,
+    9,
+    31,
+    80,
+    80,
+    71,
+    83,
+    5,
+    71,
+    69,
+    45,
+    69,
+    26,
+    83,
+    5,
+    45,
+    26,
+    80,
+    13,
+    48,
+    96,
+    0,
+    54,
+    94,
+    18,
+    80,
+    54,
+    52,
+    57,
+    81,
+    13,
+    94,
+    52,
+    61,
+    23,
+    48,
+    18,
+    57,
+    61,
+    50,
+    96,
+    81,
+    23,
+    50,
+    10,
+    95,
+    10,
+    11,
+    13,
+    49,
+    80,
+    11,
+    49,
+    58,
+    80,
+    58,
+    0,
+    95,
+    13
+  ],
+  "one_step_nodes": {
+    "جامعة السويس": [
+      "BANK MISR",
+      "مكتب تموين جمعيتي",
+      "مركز براعم للاطفال",
+      "Miramar Cafe"
+    ],
+    "Information Technology Institute Mansoura Branch": [
+      "فر ع جامعة المنصورة",
+      "منصة مكوك للمتاجر الالكترونية",
+      "كارفور ماركت",
+      "Elaf Egypt",
+      "كافتيريا ومطعم نيولوك &",
+      "Cinema Galaxy"
+    ],
+    "مدينة كفرالشيخ": [
+      "Banque Misr",
+      "سوبر ماركت الربيع",
+      "أسواق الشيتانى",
+      "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+      "ابوعبده",
+      "دار عرض سينما الجمهورية"
+    ],
+    "شارع الجزائر تقسيم2 كفرالشيخ": [
+      "Nasser Social Bank - NSB",
+      "سليم ماركت",
+      "اسواق عباد الرحمن",
+      "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+      "مطبخنا الحديث",
+      "Zombie VR"
+    ]
+  },
+  "node_edges": {
+    "Information Technology Institute Mansoura Branch": [
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "منصة مكوك للمتاجر الالكترونية",
+        "Convenience store",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "Elaf Egypt",
+        "hospital",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "Cinema Galaxy",
+        "Cinema",
+        "Information Technology Institute Mansoura Branch"
+      ]
+    ],
+    "جامعة السويس": [
+      [
+        "BANK MISR",
+        "Bank",
+        "جامعة السويس"
+      ],
+      [
+        "مكتب تموين جمعيتي",
+        "supermarket",
+        "جامعة السويس"
+      ],
+      [
+        "مركز براعم للاطفال",
+        "hospital",
+        "جامعة السويس"
+      ],
+      [
+        "Miramar Cafe",
+        "Dinning room",
+        "جامعة السويس"
+      ]
+    ],
+    "شارع الجزائر تقسيم2 كفرالشيخ": [
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "سليم ماركت",
+        "Convenience store",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ]
+    ],
+    "مدينة كفرالشيخ": [
+      [
+        "Banque Misr",
+        "Bank",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "مدينة كفرالشيخ"
+      ]
+    ],
+    "BANK MISR": [],
+    "مكتب تموين جمعيتي": [
+      [
+        "Miramar Cafe",
+        "Dinning room",
+        "مكتب تموين جمعيتي"
+      ]
+    ],
+    "مركز براعم للاطفال": [],
+    "Miramar Cafe": [
+      [
+        "مكتب تموين جمعيتي",
+        "supermarket",
+        "Miramar Cafe"
+      ]
+    ],
+    "فر ع جامعة المنصورة": [
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "فر ع جامعة المنصورة"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "فر ع جامعة المنصورة"
+      ]
+    ],
+    "منصة مكوك للمتاجر الالكترونية": [
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "منصة مكوك للمتاجر الالكترونية"
+      ]
+    ],
+    "كارفور ماركت": [
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "كارفور ماركت"
+      ],
+      [
+        "Elaf Egypt",
+        "hospital",
+        "كارفور ماركت"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "كارفور ماركت"
+      ]
+    ],
+    "Elaf Egypt": [
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "Elaf Egypt"
+      ],
+      [
+        "Cinema Galaxy",
+        "Cinema",
+        "Elaf Egypt"
+      ]
+    ],
+    "كافتيريا ومطعم نيولوك &": [
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "كافتيريا ومطعم نيولوك &"
+      ],
+      [
+        "منصة مكوك للمتاجر الالكترونية",
+        "Convenience store",
+        "كافتيريا ومطعم نيولوك &"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "كافتيريا ومطعم نيولوك &"
+      ]
+    ],
+    "Cinema Galaxy": [
+      [
+        "Elaf Egypt",
+        "hospital",
+        "Cinema Galaxy"
+      ]
+    ],
+    "Banque Misr": [
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "Banque Misr"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "Banque Misr"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "Banque Misr"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Banque Misr"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "Banque Misr"
+      ]
+    ],
+    "سوبر ماركت الربيع": [
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "سوبر ماركت الربيع"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "سوبر ماركت الربيع"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "سوبر ماركت الربيع"
+      ]
+    ],
+    "أسواق الشيتانى": [
+      [
+        "Banque Misr",
+        "Bank",
+        "أسواق الشيتانى"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "أسواق الشيتانى"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "أسواق الشيتانى"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "أسواق الشيتانى"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "أسواق الشيتانى"
+      ]
+    ],
+    "مستشفى صندلا المركزى.. Central Hospital of Sundela": [
+      [
+        "Banque Misr",
+        "Bank",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ]
+    ],
+    "ابوعبده": [
+      [
+        "Banque Misr",
+        "Bank",
+        "ابوعبده"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "ابوعبده"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "ابوعبده"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "ابوعبده"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "ابوعبده"
+      ]
+    ],
+    "دار عرض سينما الجمهورية": [
+      [
+        "Banque Misr",
+        "Bank",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "دار عرض سينما الجمهورية"
+      ]
+    ],
+    "Nasser Social Bank - NSB": [
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "Nasser Social Bank - NSB"
+      ]
+    ],
+    "سليم ماركت": [],
+    "اسواق عباد الرحمن": [
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "اسواق عباد الرحمن"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "اسواق عباد الرحمن"
+      ]
+    ],
+    "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة": [
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ],
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ]
+    ],
+    "مطبخنا الحديث": [
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "مطبخنا الحديث"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "مطبخنا الحديث"
+      ]
+    ],
+    "Zombie VR": [
+      [
+        "Banque Misr",
+        "Bank",
+        "Zombie VR"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Zombie VR"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "Zombie VR"
+      ]
+    ]
+  },
+  "one_step_node_edges": {
+    "جامعة السويس": [
+      [
+        "BANK MISR",
+        "Bank",
+        "جامعة السويس"
+      ],
+      [
+        "مكتب تموين جمعيتي",
+        "supermarket",
+        "جامعة السويس"
+      ],
+      [
+        "مركز براعم للاطفال",
+        "hospital",
+        "جامعة السويس"
+      ],
+      [
+        "Miramar Cafe",
+        "Dinning room",
+        "جامعة السويس"
+      ],
+      [
+        "Miramar Cafe",
+        "Dinning room",
+        "مكتب تموين جمعيتي"
+      ],
+      [
+        "مكتب تموين جمعيتي",
+        "supermarket",
+        "Miramar Cafe"
+      ]
+    ],
+    "Information Technology Institute Mansoura Branch": [
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "منصة مكوك للمتاجر الالكترونية",
+        "Convenience store",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "Elaf Egypt",
+        "hospital",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "Cinema Galaxy",
+        "Cinema",
+        "Information Technology Institute Mansoura Branch"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "فر ع جامعة المنصورة"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "فر ع جامعة المنصورة"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "منصة مكوك للمتاجر الالكترونية"
+      ],
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "كارفور ماركت"
+      ],
+      [
+        "Elaf Egypt",
+        "hospital",
+        "كارفور ماركت"
+      ],
+      [
+        "كافتيريا ومطعم نيولوك &",
+        "Dinning room",
+        "كارفور ماركت"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "Elaf Egypt"
+      ],
+      [
+        "Cinema Galaxy",
+        "Cinema",
+        "Elaf Egypt"
+      ],
+      [
+        "فر ع جامعة المنصورة",
+        "Bank",
+        "كافتيريا ومطعم نيولوك &"
+      ],
+      [
+        "منصة مكوك للمتاجر الالكترونية",
+        "Convenience store",
+        "كافتيريا ومطعم نيولوك &"
+      ],
+      [
+        "كارفور ماركت",
+        "supermarket",
+        "كافتيريا ومطعم نيولوك &"
+      ],
+      [
+        "Elaf Egypt",
+        "hospital",
+        "Cinema Galaxy"
+      ]
+    ],
+    "مدينة كفرالشيخ": [
+      [
+        "Banque Misr",
+        "Bank",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "مدينة كفرالشيخ"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "Banque Misr"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "Banque Misr"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "Banque Misr"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Banque Misr"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "Banque Misr"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "سوبر ماركت الربيع"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "سوبر ماركت الربيع"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "سوبر ماركت الربيع"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "أسواق الشيتانى"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "أسواق الشيتانى"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "أسواق الشيتانى"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "أسواق الشيتانى"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "أسواق الشيتانى"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "ابوعبده"
+      ],
+      [
+        "سوبر ماركت الربيع",
+        "Convenience store",
+        "ابوعبده"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "ابوعبده"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "ابوعبده"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "ابوعبده"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "أسواق الشيتانى",
+        "supermarket",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "مستشفى صندلا المركزى.. Central Hospital of Sundela",
+        "hospital",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "ابوعبده",
+        "Dinning room",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "Zombie VR"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Zombie VR"
+      ]
+    ],
+    "شارع الجزائر تقسيم2 كفرالشيخ": [
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "سليم ماركت",
+        "Convenience store",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "شارع الجزائر تقسيم2 كفرالشيخ"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "Banque Misr"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "دار عرض سينما الجمهورية"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "Zombie VR",
+        "Cinema",
+        "Nasser Social Bank - NSB"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "اسواق عباد الرحمن"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "اسواق عباد الرحمن"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ],
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ],
+      [
+        "مطبخنا الحديث",
+        "Dinning room",
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة"
+      ],
+      [
+        "اسواق عباد الرحمن",
+        "supermarket",
+        "مطبخنا الحديث"
+      ],
+      [
+        "عيادة د عبدالقادر حجازي ش ابراهيم المغازي ناصية ش الصداقة",
+        "hospital",
+        "مطبخنا الحديث"
+      ],
+      [
+        "Banque Misr",
+        "Bank",
+        "Zombie VR"
+      ],
+      [
+        "دار عرض سينما الجمهورية",
+        "Cinema",
+        "Zombie VR"
+      ],
+      [
+        "Nasser Social Bank - NSB",
+        "Bank",
+        "Zombie VR"
+      ]
+    ]
+  }
+}

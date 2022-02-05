@@ -1,0 +1,455 @@
+{
+    "paths": {
+        "User": [
+            [
+                "User",
+                "Worked at",
+                "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627"
+            ],
+            [
+                "User",
+                "Graduated from",
+                "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627"
+            ],
+            [
+                "User",
+                "live",
+                "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627"
+            ],
+            [
+                "User",
+                "born in",
+                "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627"
+            ]
+        ],
+        "PersonEntity": {
+            "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627": [
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "Bank",
+                    "Credit Agricole Egypt Tanta Branch"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "Convenience store",
+                    "\u0645\u0627\u0631\u0643\u062a \u0627\u0628\u0648 \u0631\u0628\u064a\u0639"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "supermarket",
+                    "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "hospital",
+                    "Maghrabi Eye Hospital - Tanta"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "Dinning room",
+                    "KFC"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627",
+                    "Cinema",
+                    "Cinema Egypt"
+                ]
+            ],
+            "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627": [
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "Bank",
+                    "\u0627\u0644\u0628\u0646\u0643 \u0627\u0644\u0632\u0631\u0627\u0639\u064a \u0627\u0644\u0645\u0635\u0631\u064a - \u0642\u0637\u0627\u0639 \u0628\u062d\u0631\u064a"
+                ],
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "Convenience store",
+                    "\u0645\u0627\u0631\u0643\u062a \u0627\u062f\u0645"
+                ],
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "supermarket",
+                    "\u0647\u0628\u0631\u0647 \u0645\u0627\u0631\u0643\u062a"
+                ],
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "hospital",
+                    "Tanta Military Hospital"
+                ],
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "Dinning room",
+                    "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644"
+                ],
+                [
+                    "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627",
+                    "Cinema",
+                    "Screen Hur propaganda"
+                ]
+            ],
+            "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627": [
+                [
+                    "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627",
+                    "Bank",
+                    "Qatar National Bank (QNB)"
+                ],
+                [
+                    "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627",
+                    "supermarket",
+                    "\u0648\u0634 \u0627\u0644\u062e\u064a\u0631"
+                ],
+                [
+                    "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627",
+                    "hospital",
+                    "\u062c\u0645\u0639\u064a\u0629 \u0631\u0633\u0627\u0644\u0629 - \u0643\u0641\u0631 \u0639\u0635\u0627\u0645"
+                ],
+                [
+                    "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627",
+                    "Dinning room",
+                    "\u0645\u0637\u0639\u0645 \u0623\u0628\u0646\u0627\u0621 \u0627\u0644\u0645\u062d\u0644\u0629"
+                ],
+                [
+                    "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627",
+                    "Cinema",
+                    "Sea Cinema Tanta"
+                ]
+            ],
+            "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627": [
+                [
+                    "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627",
+                    "Convenience store",
+                    "In the footsteps of the beloved"
+                ],
+                [
+                    "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627",
+                    "supermarket",
+                    "Abo Abdo Market"
+                ],
+                [
+                    "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627",
+                    "hospital",
+                    "Tanta Hospital Skin and Venereal and leprosy"
+                ],
+                [
+                    "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627",
+                    "Dinning room",
+                    "\u0643\u0634\u0631\u0649 \u0627\u0644\u0627\u0645\u0627\u0646\u0647"
+                ],
+                [
+                    "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627",
+                    "Cinema",
+                    "Screen Hur propaganda"
+                ]
+            ]
+        },
+        "NewAdd": [
+            [
+                "Credit Agricole Egypt Tanta Branch",
+                "supermarket",
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631"
+            ],
+            [
+                "Credit Agricole Egypt Tanta Branch",
+                "hospital",
+                "Maghrabi Eye Hospital - Tanta"
+            ],
+            [
+                "Credit Agricole Egypt Tanta Branch",
+                "Dinning room",
+                "KFC"
+            ],
+            [
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631",
+                "Bank",
+                "Credit Agricole Egypt Tanta Branch"
+            ],
+            [
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631",
+                "hospital",
+                "Maghrabi Eye Hospital - Tanta"
+            ],
+            [
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631",
+                "Dinning room",
+                "KFC"
+            ],
+            [
+                "Maghrabi Eye Hospital - Tanta",
+                "Bank",
+                "Credit Agricole Egypt Tanta Branch"
+            ],
+            [
+                "Maghrabi Eye Hospital - Tanta",
+                "supermarket",
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631"
+            ],
+            [
+                "Maghrabi Eye Hospital - Tanta",
+                "Dinning room",
+                "KFC"
+            ],
+            [
+                "KFC",
+                "Bank",
+                "Credit Agricole Egypt Tanta Branch"
+            ],
+            [
+                "KFC",
+                "supermarket",
+                "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631"
+            ],
+            [
+                "KFC",
+                "hospital",
+                "Maghrabi Eye Hospital - Tanta"
+            ],
+            [
+                "\u0647\u0628\u0631\u0647 \u0645\u0627\u0631\u0643\u062a",
+                "hospital",
+                "Tanta Military Hospital"
+            ],
+            [
+                "Tanta Military Hospital",
+                "supermarket",
+                "\u0647\u0628\u0631\u0647 \u0645\u0627\u0631\u0643\u062a"
+            ],
+            [
+                "Tanta Military Hospital",
+                "Dinning room",
+                "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644"
+            ],
+            [
+                "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644",
+                "hospital",
+                "Tanta Military Hospital"
+            ],
+            [
+                "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644",
+                "Cinema",
+                "Screen Hur propaganda"
+            ],
+            [
+                "Screen Hur propaganda",
+                "Dinning room",
+                "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644"
+            ],
+            [
+                "Qatar National Bank (QNB)",
+                "Cinema",
+                "Sea Cinema Tanta"
+            ],
+            [
+                "Sea Cinema Tanta",
+                "Bank",
+                "Qatar National Bank (QNB)"
+            ]
+        ]
+    },
+    "entity_description": {
+        "User": 3,
+        "PersonEntity": {
+            "\u062c\u0627\u0645\u0639\u0629 \u0637\u0646\u0637\u0627": {
+                "id": "67113910",
+                "loc": [
+                    "30.7924391",
+                    "30.9991409"
+                ],
+                "type": "University"
+            },
+            "\u0646\u0627\u062f\u064a \u0627\u0644\u0633\u0643\u0629 \u0627\u0644\u062d\u062f\u064a\u062f \u0628\u0637\u0646\u0637\u0627": {
+                "id": "43389601",
+                "loc": [
+                    "30.7808058",
+                    "30.9931569"
+                ],
+                "type": "company"
+            },
+            "\u0643\u0641\u0631 \u0639\u0635\u0627\u0645 \u0637\u0646\u0637\u0627": {
+                "id": "87754349",
+                "loc": [
+                    "30.8066458",
+                    "30.9850213"
+                ],
+                "type": "Residential area"
+            },
+            "\u0634\u0627\u0631\u0639 \u0627\u0628\u0648 \u0639\u0627\u0645\u0631 \u0637\u0646\u0637\u0627": {
+                "id": "69647427",
+                "loc": [
+                    "30.7744319",
+                    "31.0055249"
+                ],
+                "type": "Residential area"
+            }
+        },
+        "OneStepEntity": {
+            "Credit Agricole Egypt Tanta Branch": {
+                "id": "87412113",
+                "loc": [
+                    30.7913991,
+                    30.9990839
+                ],
+                "type": "Bank"
+            },
+            "\u0645\u0627\u0631\u0643\u062a \u0627\u0628\u0648 \u0631\u0628\u064a\u0639": {
+                "id": "52283902",
+                "loc": [
+                    30.792255,
+                    31.0040856
+                ],
+                "type": "Convenience store"
+            },
+            "\u062f\u0644\u062a\u0627 \u0645\u0627\u0631\u0643\u062a \u0627\u0644\u0628\u062d\u0631": {
+                "id": "94186467",
+                "loc": [
+                    30.7918408,
+                    30.99920760000001
+                ],
+                "type": "supermarket"
+            },
+            "Maghrabi Eye Hospital - Tanta": {
+                "id": "75707574",
+                "loc": [
+                    30.7930033,
+                    30.99826669999999
+                ],
+                "type": "hospital"
+            },
+            "KFC": {
+                "id": "88182171",
+                "loc": [
+                    30.7930025,
+                    30.9982571
+                ],
+                "type": "Dinning room"
+            },
+            "Cinema Egypt": {
+                "id": "82813391",
+                "loc": [
+                    30.7860547,
+                    30.9965496
+                ],
+                "type": "Cinema"
+            },
+            "\u0627\u0644\u0628\u0646\u0643 \u0627\u0644\u0632\u0631\u0627\u0639\u064a \u0627\u0644\u0645\u0635\u0631\u064a - \u0642\u0637\u0627\u0639 \u0628\u062d\u0631\u064a": {
+                "id": "94404459",
+                "loc": [
+                    30.7865776,
+                    30.9913943
+                ],
+                "type": "Bank"
+            },
+            "\u0645\u0627\u0631\u0643\u062a \u0627\u062f\u0645": {
+                "id": "94205519",
+                "loc": [
+                    30.784918,
+                    30.9941246
+                ],
+                "type": "Convenience store"
+            },
+            "\u0647\u0628\u0631\u0647 \u0645\u0627\u0631\u0643\u062a": {
+                "id": "06292163",
+                "loc": [
+                    30.7794819,
+                    30.99200100000001
+                ],
+                "type": "supermarket"
+            },
+            "Tanta Military Hospital": {
+                "id": "88903816",
+                "loc": [
+                    30.78052809999999,
+                    30.9924716
+                ],
+                "type": "hospital"
+            },
+            "\u0645\u0637\u0639\u0645 \u0627\u0633\u0637\u0645\u0628\u0648\u0644": {
+                "id": "65425762",
+                "loc": [
+                    30.7818603,
+                    30.9934073
+                ],
+                "type": "Dinning room"
+            },
+            "Screen Hur propaganda": {
+                "id": "18405168",
+                "loc": [
+                    30.7815852,
+                    30.99583
+                ],
+                "type": "Cinema"
+            },
+            "Qatar National Bank (QNB)": {
+                "id": "21883128",
+                "loc": [
+                    30.8077946,
+                    30.9946257
+                ],
+                "type": "Bank"
+            },
+            "\u0648\u0634 \u0627\u0644\u062e\u064a\u0631": {
+                "id": "16744612",
+                "loc": [
+                    30.8057031,
+                    30.99049139999999
+                ],
+                "type": "supermarket"
+            },
+            "\u062c\u0645\u0639\u064a\u0629 \u0631\u0633\u0627\u0644\u0629 - \u0643\u0641\u0631 \u0639\u0635\u0627\u0645": {
+                "id": "90255509",
+                "loc": [
+                    30.8072449,
+                    30.9864051
+                ],
+                "type": "hospital"
+            },
+            "\u0645\u0637\u0639\u0645 \u0623\u0628\u0646\u0627\u0621 \u0627\u0644\u0645\u062d\u0644\u0629": {
+                "id": "48041227",
+                "loc": [
+                    30.8095107,
+                    30.9863243
+                ],
+                "type": "Dinning room"
+            },
+            "Sea Cinema Tanta": {
+                "id": "27951778",
+                "loc": [
+                    30.8075,
+                    30.99519999999999
+                ],
+                "type": "Cinema"
+            },
+            "In the footsteps of the beloved": {
+                "id": "21600666",
+                "loc": [
+                    30.77440260000001,
+                    31.012679
+                ],
+                "type": "Convenience store"
+            },
+            "Abo Abdo Market": {
+                "id": "36554746",
+                "loc": [
+                    30.772727,
+                    31.0036124
+                ],
+                "type": "supermarket"
+            },
+            "Tanta Hospital Skin and Venereal and leprosy": {
+                "id": "53060844",
+                "loc": [
+                    30.77681050000001,
+                    31.00311800000001
+                ],
+                "type": "hospital"
+            },
+            "\u0643\u0634\u0631\u0649 \u0627\u0644\u0627\u0645\u0627\u0646\u0647": {
+                "id": "79571206",
+                "loc": [
+                    30.7748435,
+                    31.00164429999999
+                ],
+                "type": "Dinning room"
+            }
+        }
+    }
+}

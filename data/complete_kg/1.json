@@ -1,0 +1,401 @@
+{
+    "paths": {
+        "User": [
+            [
+                "User",
+                "Worked at",
+                "ITI Smart Village"
+            ],
+            [
+                "User",
+                "Graduated from",
+                "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633"
+            ],
+            [
+                "User",
+                "live",
+                "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631"
+            ],
+            [
+                "User",
+                "born in",
+                "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629"
+            ]
+        ],
+        "PersonEntity": {
+            "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633": [
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633",
+                    "Bank",
+                    "Agricultural Development Bank and credit-"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633",
+                    "hospital",
+                    "\u0645\u0631\u0643\u0632 \u062d\u0628\u064a\u0628 \u0627\u0644\u0637\u0628\u064a HABIB MEDICAL CENTER"
+                ],
+                [
+                    "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633",
+                    "Dinning room",
+                    "ZAD restaurant and cafe"
+                ]
+            ],
+            "ITI Smart Village": [
+                [
+                    "ITI Smart Village",
+                    "Bank",
+                    "Credit Agricole Bank"
+                ],
+                [
+                    "ITI Smart Village",
+                    "Convenience store",
+                    "Circlek Egypt"
+                ],
+                [
+                    "ITI Smart Village",
+                    "hospital",
+                    "Go Clinic"
+                ],
+                [
+                    "ITI Smart Village",
+                    "Dinning room",
+                    "\u0627\u0644\u0634\u0628\u0631\u0627\u0648\u064a"
+                ],
+                [
+                    "ITI Smart Village",
+                    "Cinema",
+                    "Renaissance Cinema Dandy Mall - \u0631\u064a\u0646\u064a\u0633\u0627\u0646\u0633 \u0633\u064a\u0646\u0645\u0627 \u062f\u0627\u0646\u062f\u064a \u0645\u0648\u0644"
+                ]
+            ],
+            "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629": [
+                [
+                    "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629",
+                    "supermarket",
+                    "El Qods Supermarket"
+                ],
+                [
+                    "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629",
+                    "hospital",
+                    "health unit"
+                ],
+                [
+                    "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629",
+                    "Dinning room",
+                    "El Salakawy Sons"
+                ]
+            ],
+            "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631": [
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "Bank",
+                    "CIB - Commercial International Bank"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "bus stop",
+                    "Al Andals Hospital"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "Convenience store",
+                    "\u0627\u0644\u0641\u0631\u062f\u0648\u0633"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "supermarket",
+                    "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "hospital",
+                    "\u0645\u0633\u062a\u0634\u0641\u0649 \u0627\u0644\u0645\u0635\u064a\u0644\u062d\u0649"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "Dinning room",
+                    "Dough & Dough"
+                ],
+                [
+                    "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631",
+                    "Cinema",
+                    "Diana Cinema"
+                ]
+            ]
+        },
+        "NewAdd": [
+            [
+                "Credit Agricole Bank",
+                "Convenience store",
+                "Circlek Egypt"
+            ],
+            [
+                "Circlek Egypt",
+                "Bank",
+                "Credit Agricole Bank"
+            ],
+            [
+                "Go Clinic",
+                "Cinema",
+                "Renaissance Cinema Dandy Mall - \u0631\u064a\u0646\u064a\u0633\u0627\u0646\u0633 \u0633\u064a\u0646\u0645\u0627 \u062f\u0627\u0646\u062f\u064a \u0645\u0648\u0644"
+            ],
+            [
+                "Renaissance Cinema Dandy Mall - \u0631\u064a\u0646\u064a\u0633\u0627\u0646\u0633 \u0633\u064a\u0646\u0645\u0627 \u062f\u0627\u0646\u062f\u064a \u0645\u0648\u0644",
+                "hospital",
+                "Go Clinic"
+            ],
+            [
+                "El Qods Supermarket",
+                "hospital",
+                "health unit"
+            ],
+            [
+                "El Qods Supermarket",
+                "Dinning room",
+                "El Salakawy Sons"
+            ],
+            [
+                "health unit",
+                "supermarket",
+                "El Qods Supermarket"
+            ],
+            [
+                "health unit",
+                "Dinning room",
+                "El Salakawy Sons"
+            ],
+            [
+                "El Salakawy Sons",
+                "supermarket",
+                "El Qods Supermarket"
+            ],
+            [
+                "El Salakawy Sons",
+                "hospital",
+                "health unit"
+            ],
+            [
+                "CIB - Commercial International Bank",
+                "supermarket",
+                "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a"
+            ],
+            [
+                "CIB - Commercial International Bank",
+                "Dinning room",
+                "Dough & Dough"
+            ],
+            [
+                "\u0627\u0644\u0641\u0631\u062f\u0648\u0633",
+                "hospital",
+                "\u0645\u0633\u062a\u0634\u0641\u0649 \u0627\u0644\u0645\u0635\u064a\u0644\u062d\u0649"
+            ],
+            [
+                "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a",
+                "Bank",
+                "CIB - Commercial International Bank"
+            ],
+            [
+                "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a",
+                "Dinning room",
+                "Dough & Dough"
+            ],
+            [
+                "\u0645\u0633\u062a\u0634\u0641\u0649 \u0627\u0644\u0645\u0635\u064a\u0644\u062d\u0649",
+                "Convenience store",
+                "\u0627\u0644\u0641\u0631\u062f\u0648\u0633"
+            ],
+            [
+                "Dough & Dough",
+                "Bank",
+                "CIB - Commercial International Bank"
+            ],
+            [
+                "Dough & Dough",
+                "supermarket",
+                "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a"
+            ]
+        ]
+    },
+    "entity_description": {
+        "User": 907,
+        "PersonEntity": {
+            "\u062c\u0627\u0645\u0639\u0629 \u0639\u064a\u0646 \u0634\u0645\u0633": {
+                "id": "55220800",
+                "loc": [
+                    "30.207138",
+                    "31.4475185"
+                ],
+                "type": "University"
+            },
+            "ITI Smart Village": {
+                "id": "46771875",
+                "loc": [
+                    "30.071112",
+                    "31.0210709"
+                ],
+                "type": "company"
+            },
+            "\u0642\u0648\u064a\u0633\u0646\u0627 \u0627\u0644\u0645\u0646\u0648\u0641\u064a\u0629": {
+                "id": "82166081",
+                "loc": [
+                    "30.5624891",
+                    "31.15987629999999"
+                ],
+                "type": "Residential area"
+            },
+            "82 \u0634\u0627\u0631\u0639 \u0639\u0628\u0627\u0633 \u0627\u0644\u0639\u0642\u0627\u062f \u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631": {
+                "id": "94475722",
+                "loc": [
+                    "30.0572432",
+                    "31.3380422"
+                ],
+                "type": "Residential area"
+            }
+        },
+        "OneStepEntity": {
+            "Agricultural Development Bank and credit-": {
+                "id": "85157339",
+                "loc": [
+                    30.2054863,
+                    31.4439912
+                ],
+                "type": "Bank"
+            },
+            "\u0645\u0631\u0643\u0632 \u062d\u0628\u064a\u0628 \u0627\u0644\u0637\u0628\u064a HABIB MEDICAL CENTER": {
+                "id": "53831222",
+                "loc": [
+                    30.211528,
+                    31.4474201
+                ],
+                "type": "hospital"
+            },
+            "ZAD restaurant and cafe": {
+                "id": "66587596",
+                "loc": [
+                    30.21402479999999,
+                    31.4483244
+                ],
+                "type": "Dinning room"
+            },
+            "Credit Agricole Bank": {
+                "id": "62853042",
+                "loc": [
+                    30.0685795,
+                    31.0169195
+                ],
+                "type": "Bank"
+            },
+            "Circlek Egypt": {
+                "id": "56692564",
+                "loc": [
+                    30.0672512,
+                    31.0186201
+                ],
+                "type": "Convenience store"
+            },
+            "Go Clinic": {
+                "id": "52887799",
+                "loc": [
+                    30.0640527,
+                    31.0270616
+                ],
+                "type": "hospital"
+            },
+            "\u0627\u0644\u0634\u0628\u0631\u0627\u0648\u064a": {
+                "id": "65036294",
+                "loc": [
+                    30.07204920000001,
+                    31.0220613
+                ],
+                "type": "Dinning room"
+            },
+            "Renaissance Cinema Dandy Mall - \u0631\u064a\u0646\u064a\u0633\u0627\u0646\u0633 \u0633\u064a\u0646\u0645\u0627 \u062f\u0627\u0646\u062f\u064a \u0645\u0648\u0644": {
+                "id": "08865570",
+                "loc": [
+                    30.0627467,
+                    31.0287939
+                ],
+                "type": "Cinema"
+            },
+            "El Qods Supermarket": {
+                "id": "48134039",
+                "loc": [
+                    30.56516719999999,
+                    31.1578769
+                ],
+                "type": "supermarket"
+            },
+            "health unit": {
+                "id": "44044567",
+                "loc": [
+                    30.56339819999999,
+                    31.1575828
+                ],
+                "type": "hospital"
+            },
+            "El Salakawy Sons": {
+                "id": "01201970",
+                "loc": [
+                    30.56516719999999,
+                    31.1578769
+                ],
+                "type": "Dinning room"
+            },
+            "CIB - Commercial International Bank": {
+                "id": "71872304",
+                "loc": [
+                    30.0571835,
+                    31.3376376
+                ],
+                "type": "Bank"
+            },
+            "Al Andals Hospital": {
+                "id": "36049691",
+                "loc": [
+                    30.04938,
+                    31.32765
+                ],
+                "type": "bus stop"
+            },
+            "\u0627\u0644\u0641\u0631\u062f\u0648\u0633": {
+                "id": "17999538",
+                "loc": [
+                    30.0560244,
+                    31.33409520000001
+                ],
+                "type": "Convenience store"
+            },
+            "\u0633\u0648\u0628\u0631 \u0645\u0627\u0631\u0643\u062a": {
+                "id": "22199525",
+                "loc": [
+                    30.0569433,
+                    31.3380887
+                ],
+                "type": "supermarket"
+            },
+            "\u0645\u0633\u062a\u0634\u0641\u0649 \u0627\u0644\u0645\u0635\u064a\u0644\u062d\u0649": {
+                "id": "91587970",
+                "loc": [
+                    30.05803139999999,
+                    31.3346989
+                ],
+                "type": "hospital"
+            },
+            "Dough & Dough": {
+                "id": "43884268",
+                "loc": [
+                    30.0566063,
+                    31.3376986
+                ],
+                "type": "Dinning room"
+            },
+            "Diana Cinema": {
+                "id": "83425369",
+                "loc": [
+                    30.0551123,
+                    31.3292446
+                ],
+                "type": "Cinema"
+            }
+        }
+    }
+}
