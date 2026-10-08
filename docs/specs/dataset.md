@@ -36,13 +36,49 @@ the default wraps `sample_case`.
 | Field | How it is generated |
 | --- | --- |
 | `honesty` | `genuine` 60%, `exaggerator` 30%, `impostor` 10% |
-| skills | 3 distinct skills from the question bank |
+| skills | 3 or 4 distinct skills from the question bank |
 | `truth` (real level) | genuine / exaggerator: beginner..senior uniformly; impostor: none or beginner |
-| `claimed` | genuine: = real; exaggerator: real + 1..2 (max senior); impostor: mid or senior |
-| `inputs.cv` | e.g. "Software engineer. Skills: senior Python, SQL (junior), mid React." |
+| intended claim | genuine: = real; exaggerator: real + 1..2 (max senior); impostor: mid or senior |
+| `inputs.cv` | a full CV (see below) |
+| `claimed` | the level the CV actually states; `junior` (the reader's default) when a skill is listed without a level |
+| `inputs.job` | 50% of cases: a short job posting naming two of the candidate's skills and one other |
 | `traits.sharpness` | Normal(0, 0.35), added to every skill level |
 | `traits.fatigue` | Uniform(0, 0.06) levels lost per question already asked |
 | `traits.lookup` | chance to look an answer up: 0.35 impostors, 0.03 others |
+
+## The CV document (`cvgen.py`)
+All names, companies and universities are invented; e-mails use `example.com`.
+
+```
+Lucas Silva
+Senior Backend Engineer · Cairo · lucas.silva@example.com
+
+SUMMARY
+Backend Engineer (6+ years of experience) who enjoys building reliable products ...
+
+EXPERIENCE
+Senior Backend Engineer - Cedar Analytics (2024 - present)
+- Built internal services in FastAPI handling 6k requests a day
+- Designed REST APIs consumed by 14 mobile and web clients
+- Worked with AWS and Linux
+Backend Engineer - Papyrus Labs (2022 - 2024)
+...
+
+EDUCATION
+B.Sc. Mathematics - Coastal Polytechnic (2020)
+
+SKILLS
+advanced Python, REST APIs - junior, junior SQL, Bash, Git (beginner), Terraform
+```
+
+- Title and years follow the candidate's highest claimed skill (exaggerators inflate them too);
+  1–3 jobs whose dates add up to the stated years.
+- Bullet points mention skills by name or alias (Django, PostgreSQL, Next.js, GitHub …) without
+  levels; filler tools (Linux, Jira, AWS, Terraform …) are never checked skills.
+- The skills section states each level as a word ("Python (senior)", "advanced Docker",
+  "Git - beginner"), as years ("SQL: 5 years", "5+ years of Python"; 1–2 → junior, 3–4 → mid,
+  5+ → senior) or not at all ("Git").
+- The offline extractor reads the stated level correctly for 100% of 1,410 generated skills.
 
 ## How a persona answers (`answer_quality`, `write_answer`)
 

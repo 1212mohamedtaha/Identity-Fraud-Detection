@@ -13,11 +13,12 @@ import re
 
 from ...core.dataset import write_jsonl
 from ...llm.base import LLM
-from . import DIFFICULTY_LEVEL, LEVELS, CVClaims, keyword_score, skill_bank
+from . import DEFAULT_LEVEL, DIFFICULTY_LEVEL, LEVELS, CVClaims, keyword_score, skill_bank
+from .cvgen import make_cv, make_job
 
 # Share of candidates per honesty type.
 HONESTY = {"genuine": 0.6, "exaggerator": 0.3, "impostor": 0.1}
-SKILLS_PER_CV = 3
+SKILLS_PER_CV = (3, 4)      # a CV lists 3 or 4 checkable skills
 UNSURE_LINES = ["I'm not sure.", "I don't know, sorry.", "No idea, I haven't used that much."]
 PARAPHRASE = "something related to that"   # stands in for a key point said in other words
 
@@ -35,24 +36,28 @@ def hidden_difficulty(question, label):
 
 # ---------------------------------------------------------------- personas
 def make_persona(rng, index):
+    """One synthetic candidate with a realistic CV. ``claimed`` is the level the CV states for
+    each skill (``junior``, the reader's default, when the CV names a skill without a level)."""
     honesty = rng.choices(list(HONESTY), weights=list(HONESTY.values()))[0]
-    keys = rng.sample(sorted(skill_bank()), SKILLS_PER_CV)
+    keys = rng.sample(sorted(skill_bank()), rng.choice(SKILLS_PER_CV))
     top = len(LEVELS) - 1
-    real, claimed, parts = {}, {}, []
+    real, intended = {}, {}
     for key in keys:
         if honesty == "impostor":
             real[key] = rng.randint(0, 1)
-            claimed[key] = rng.randint(3, top)
+            intended[key] = rng.randint(3, top)
         else:
             real[key] = rng.randint(1, top)
             bump = rng.randint(1, 2) if honesty == "exaggerator" else 0
-            claimed[key] = min(real[key] + bump, top)
-        name, level = skill_bank()[key]["name"], LEVELS[claimed[key]]
-        parts.append(rng.choice([f"{level} {name}", f"{name} ({level})"]))
-    cv = rng.choice(["Software engineer. Skills: ", "Developer with experience in: ", "Profile - "])
+            intended[key] = min(real[key] + bump, top)
+    cv, stated = make_cv(rng, {"claimed": intended})
+    claimed = {k: LEVELS.index(DEFAULT_LEVEL) if stated[k] is None else stated[k] for k in keys}
+    inputs = {"cv": cv}
+    if rng.random() < 0.5:
+        inputs["job"] = make_job(rng, keys)
     return {
         "id": f"cv-{index:05d}",
-        "inputs": {"cv": cv + ", ".join(parts) + "."},
+        "inputs": inputs,
         "truth": real,
         "claimed": claimed,
         "honesty": honesty,

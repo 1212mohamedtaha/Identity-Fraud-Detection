@@ -1,39 +1,4 @@
 {
-  "rest-apis/0": {
-    "question": "When should an API return 401 versus 403?",
-    "label": "easy",
-    "hidden_difficulty": 0.869
-  },
-  "rest-apis/1": {
-    "question": "Which HTTP method would you use to create, read, update and delete a resource?",
-    "label": "easy",
-    "hidden_difficulty": 1.148
-  },
-  "rest-apis/2": {
-    "question": "What does it mean that PUT is idempotent but POST is not?",
-    "label": "medium",
-    "hidden_difficulty": 2.039
-  },
-  "rest-apis/3": {
-    "question": "What is the difference between PUT and PATCH?",
-    "label": "medium",
-    "hidden_difficulty": 2.75
-  },
-  "rest-apis/4": {
-    "question": "How do you version a public API?",
-    "label": "medium",
-    "hidden_difficulty": 2.048
-  },
-  "rest-apis/5": {
-    "question": "How would you paginate a large, frequently changing list in an API?",
-    "label": "hard",
-    "hidden_difficulty": 3.105
-  },
-  "rest-apis/6": {
-    "question": "How would you protect an API from too many requests by one client?",
-    "label": "hard",
-    "hidden_difficulty": 3.662
-  },
   "docker/0": {
     "question": "What is the difference between a Docker image and a container?",
     "label": "easy",
@@ -104,76 +69,6 @@
     "label": "hard",
     "hidden_difficulty": 2.757
   },
-  "sql/0": {
-    "question": "What is the difference between an INNER JOIN and a LEFT JOIN?",
-    "label": "easy",
-    "hidden_difficulty": 1.21
-  },
-  "sql/1": {
-    "question": "What does a primary key guarantee?",
-    "label": "easy",
-    "hidden_difficulty": 1.71
-  },
-  "sql/2": {
-    "question": "What is the difference between WHERE and HAVING?",
-    "label": "medium",
-    "hidden_difficulty": 2.112
-  },
-  "sql/3": {
-    "question": "Why can an index make a query faster, and what does it cost?",
-    "label": "medium",
-    "hidden_difficulty": 1.931
-  },
-  "sql/4": {
-    "question": "What is a foreign key and what does it protect?",
-    "label": "medium",
-    "hidden_difficulty": 2.736
-  },
-  "sql/5": {
-    "question": "What does transaction isolation mean? Name a problem it prevents.",
-    "label": "hard",
-    "hidden_difficulty": 3.157
-  },
-  "sql/6": {
-    "question": "What is the N+1 query problem and how do you fix it?",
-    "label": "hard",
-    "hidden_difficulty": 4.193
-  },
-  "react/0": {
-    "question": "What is the difference between props and state in React?",
-    "label": "easy",
-    "hidden_difficulty": 1.885
-  },
-  "react/1": {
-    "question": "What is JSX?",
-    "label": "easy",
-    "hidden_difficulty": 0.755
-  },
-  "react/2": {
-    "question": "What is the dependency array of `useEffect` for?",
-    "label": "medium",
-    "hidden_difficulty": 2.727
-  },
-  "react/3": {
-    "question": "When does a React component re-render?",
-    "label": "medium",
-    "hidden_difficulty": 2.517
-  },
-  "react/4": {
-    "question": "Why should you not mutate state directly in React?",
-    "label": "medium",
-    "hidden_difficulty": 1.957
-  },
-  "react/5": {
-    "question": "Why does React need a `key` on list items, and why is the array index a bad key?",
-    "label": "hard",
-    "hidden_difficulty": 3.618
-  },
-  "react/6": {
-    "question": "How would you share state between many distant components without passing props down every level?",
-    "label": "hard",
-    "hidden_difficulty": 3.142
-  },
   "python/0": {
     "question": "What is the difference between a list and a tuple in Python?",
     "label": "easy",
@@ -208,6 +103,76 @@
     "question": "Why is using a mutable default argument like `def f(items=[])` a bug?",
     "label": "hard",
     "hidden_difficulty": 3.37
+  },
+  "machine-learning/0": {
+    "question": "What is overfitting and how do you detect it?",
+    "label": "easy",
+    "hidden_difficulty": 1.902
+  },
+  "machine-learning/1": {
+    "question": "What is the difference between supervised and unsupervised learning?",
+    "label": "easy",
+    "hidden_difficulty": 1.604
+  },
+  "machine-learning/2": {
+    "question": "Why is accuracy a poor metric on imbalanced data, and what would you use instead?",
+    "label": "medium",
+    "hidden_difficulty": 2.836
+  },
+  "machine-learning/3": {
+    "question": "Why do you split data into training, validation and test sets?",
+    "label": "medium",
+    "hidden_difficulty": 2.557
+  },
+  "machine-learning/4": {
+    "question": "What does regularization do?",
+    "label": "medium",
+    "hidden_difficulty": 2.049
+  },
+  "machine-learning/5": {
+    "question": "What is data leakage? Give an example.",
+    "label": "hard",
+    "hidden_difficulty": 3.282
+  },
+  "machine-learning/6": {
+    "question": "What is the bias-variance trade-off?",
+    "label": "hard",
+    "hidden_difficulty": 4.04
+  },
+  "sql/0": {
+    "question": "What is the difference between an INNER JOIN and a LEFT JOIN?",
+    "label": "easy",
+    "hidden_difficulty": 1.21
+  },
+  "sql/1": {
+    "question": "What does a primary key guarantee?",
+    "label": "easy",
+    "hidden_difficulty": 1.71
+  },
+  "sql/2": {
+    "question": "What is the difference between WHERE and HAVING?",
+    "label": "medium",
+    "hidden_difficulty": 2.112
+  },
+  "sql/3": {
+    "question": "Why can an index make a query faster, and what does it cost?",
+    "label": "medium",
+    "hidden_difficulty": 1.931
+  },
+  "sql/4": {
+    "question": "What is a foreign key and what does it protect?",
+    "label": "medium",
+    "hidden_difficulty": 2.736
+  },
+  "sql/5": {
+    "question": "What does transaction isolation mean? Name a problem it prevents.",
+    "label": "hard",
+    "hidden_difficulty": 3.157
+  },
+  "sql/6": {
+    "question": "What is the N+1 query problem and how do you fix it?",
+    "label": "hard",
+    "hidden_difficulty": 4.193
   },
   "git/0": {
     "question": "What is the difference between `git fetch` and `git pull`?",
@@ -244,39 +209,74 @@
     "label": "hard",
     "hidden_difficulty": 3.599
   },
-  "machine-learning/0": {
-    "question": "What is overfitting and how do you detect it?",
+  "react/0": {
+    "question": "What is the difference between props and state in React?",
     "label": "easy",
-    "hidden_difficulty": 1.902
+    "hidden_difficulty": 1.885
   },
-  "machine-learning/1": {
-    "question": "What is the difference between supervised and unsupervised learning?",
+  "react/1": {
+    "question": "What is JSX?",
     "label": "easy",
-    "hidden_difficulty": 1.604
+    "hidden_difficulty": 0.755
   },
-  "machine-learning/2": {
-    "question": "Why is accuracy a poor metric on imbalanced data, and what would you use instead?",
+  "react/2": {
+    "question": "What is the dependency array of `useEffect` for?",
     "label": "medium",
-    "hidden_difficulty": 2.836
+    "hidden_difficulty": 2.727
   },
-  "machine-learning/3": {
-    "question": "Why do you split data into training, validation and test sets?",
+  "react/3": {
+    "question": "When does a React component re-render?",
     "label": "medium",
-    "hidden_difficulty": 2.557
+    "hidden_difficulty": 2.517
   },
-  "machine-learning/4": {
-    "question": "What does regularization do?",
+  "react/4": {
+    "question": "Why should you not mutate state directly in React?",
     "label": "medium",
-    "hidden_difficulty": 2.049
+    "hidden_difficulty": 1.957
   },
-  "machine-learning/5": {
-    "question": "What is data leakage? Give an example.",
+  "react/5": {
+    "question": "Why does React need a `key` on list items, and why is the array index a bad key?",
     "label": "hard",
-    "hidden_difficulty": 3.282
+    "hidden_difficulty": 3.618
   },
-  "machine-learning/6": {
-    "question": "What is the bias-variance trade-off?",
+  "react/6": {
+    "question": "How would you share state between many distant components without passing props down every level?",
     "label": "hard",
-    "hidden_difficulty": 4.04
+    "hidden_difficulty": 3.142
+  },
+  "rest-apis/0": {
+    "question": "When should an API return 401 versus 403?",
+    "label": "easy",
+    "hidden_difficulty": 0.869
+  },
+  "rest-apis/1": {
+    "question": "Which HTTP method would you use to create, read, update and delete a resource?",
+    "label": "easy",
+    "hidden_difficulty": 1.148
+  },
+  "rest-apis/2": {
+    "question": "What does it mean that PUT is idempotent but POST is not?",
+    "label": "medium",
+    "hidden_difficulty": 2.039
+  },
+  "rest-apis/3": {
+    "question": "What is the difference between PUT and PATCH?",
+    "label": "medium",
+    "hidden_difficulty": 2.75
+  },
+  "rest-apis/4": {
+    "question": "How do you version a public API?",
+    "label": "medium",
+    "hidden_difficulty": 2.048
+  },
+  "rest-apis/5": {
+    "question": "How would you paginate a large, frequently changing list in an API?",
+    "label": "hard",
+    "hidden_difficulty": 3.105
+  },
+  "rest-apis/6": {
+    "question": "How would you protect an API from too many requests by one client?",
+    "label": "hard",
+    "hidden_difficulty": 3.662
   }
 }

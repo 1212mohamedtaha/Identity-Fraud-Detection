@@ -87,27 +87,50 @@ def bank_key(skill_name):
     return None
 
 
-def find(text, alias):
-    """``(start, end)`` of ``alias`` as a whole word in ``text``, or None."""
-    match = re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", text)
-    return match.span() if match else None
+def find_all(text, alias):
+    """``(start, end)`` of every whole-word mention of ``alias`` in ``text``."""
+    return [m.span() for m in re.finditer(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", text)]
 
 
 def mentions(text, alias):
-    return find(text, alias) is not None
+    return bool(find_all(text, alias))
+
+
+def level_for_years(years):
+    """Years of experience -> level: 1-2 junior, 3-4 mid, 5+ senior."""
+    if years >= 5:
+        return "senior"
+    if years >= 3:
+        return "mid"
+    return "junior"
 
 
 def level_near(text, span):
-    """The level word directly before a skill ("senior Python", "expert in Git") or directly
-    after it ("Python (senior)", "Python - senior"). Defaults to DEFAULT_LEVEL."""
+    """The level stated right next to one skill mention, or None:
+    a level word before it ("senior Python", "expert in Git") or after it ("Python (senior)",
+    "Python - advanced"), or years of experience ("5+ years of Python", "SQL: 5 years")."""
     start, end = span
-    before = re.search(r"([a-z-]+)\s+(?:(?:in|with|at)\s+)?$", text[:start])
-    if before and before.group(1) in LEVEL_WORDS:
-        return before.group(1)
-    after = re.match(r"\s*[(:–-]?\s*([a-z-]+)", text[end:])
-    if after and after.group(1) in LEVEL_WORDS:
-        return after.group(1)
-    return DEFAULT_LEVEL
+    before, after = text[:start], text[end:]
+    word = re.search(r"([a-z-]+)\s+(?:(?:in|with|at)\s+)?$", before)
+    if word and word.group(1) in LEVEL_WORDS:
+        return LEVEL_WORDS[word.group(1)]
+    word = re.match(r"\s*[(:–-]?\s*([a-z-]+)", after)
+    if word and word.group(1) in LEVEL_WORDS:
+        return LEVEL_WORDS[word.group(1)]
+    years = re.search(r"(\d+)\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:experience\s+(?:with|in)\s+)?$", before)
+    if not years:
+        years = re.match(r"\s*[(:–-]?\s*(\d+)\+?\s*(?:years?|yrs?)\b", after)
+    if years:
+        return level_for_years(int(years.group(1)))
+    return None
+
+
+def stated_level(text, spans):
+    """The strongest level stated next to any mention of a skill; DEFAULT_LEVEL if none."""
+    levels = [level for level in (level_near(text, span) for span in spans) if level]
+    if not levels:
+        return DEFAULT_LEVEL
+    return max(levels, key=LEVELS.index)
 
 
 # ---------------------------------------------------------------- claims
@@ -143,15 +166,14 @@ class CVClaims(ClaimExtractor):
         cv_text, job_text = cv.lower(), job.lower()
         found = []
         for key, skill in skill_bank().items():
-            spans = [find(cv_text, alias) for alias in skill["aliases"]]
-            spans = [span for span in spans if span]
+            spans = sorted(span for alias in skill["aliases"] for span in find_all(cv_text, alias))
             if spans:
                 wanted = any(mentions(job_text, alias) for alias in skill["aliases"])
-                found.append((not wanted, key, min(spans)))     # skills the job wants come first
+                found.append((not wanted, spans[0], key, spans))     # skills the job wants first, then CV order
         claims = []
-        for _, key, span in sorted(found)[:MAX_CLAIMS]:
+        for _, _, key, spans in sorted(found)[:MAX_CLAIMS]:
             name = skill_bank()[key]["name"]
-            claims.append(skill_claim(key, name, level_near(cv_text, span), bank=key))
+            claims.append(skill_claim(key, name, stated_level(cv_text, spans), bank=key))
         return claims
 
 

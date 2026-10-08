@@ -26,10 +26,13 @@ Each block has an **LLM version** (used when an LLM is configured) and an **offl
 Skill claims are leveled: `LEVELS = ("none", "beginner", "junior", "mid", "senior")`.
 A claim "Knows SQL at mid level" holds for real level mid or senior.
 
-- The claimed level comes from the LLM (`level` field) or, offline, from a level word directly
-  next to the skill in the CV: "senior Python", "expert in Git", "Docker (mid)", "Python - beginner".
-  Words: beginner/basic/entry-level, junior, mid/mid-level/intermediate, senior/expert/advanced/lead.
-- No level given → `junior`.
+- The claimed level comes from the LLM (`level` field) or, offline, from what is written right
+  next to **any** mention of the skill (the strongest one wins):
+  - a level word before or after: "senior Python", "expert in Git", "Docker (mid)", "Python - beginner".
+    Words: beginner/basic/entry-level, junior, mid/mid-level/intermediate, senior/expert/advanced/lead;
+  - years of experience: "5+ years of Python", "SQL: 5 years", "Docker (3 years)":
+    1–2 years → junior, 3–4 → mid, 5+ → senior.
+- No level given anywhere → `junior`.
 
 Claim ids are slugs of the skill name (`machine-learning`); text "Knows <skill> at <level> level".
 

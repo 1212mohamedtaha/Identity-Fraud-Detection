@@ -38,7 +38,7 @@ def test_impostors_claim_high_and_know_little():
     impostors = [p for p in (make_persona(rng, i) for i in range(300)) if p["honesty"] == "impostor"]
     assert impostors
     for p in impostors:
-        assert all(p["claimed"][k] >= 3 and p["truth"][k] <= 1 for k in p["truth"])
+        assert all(p["truth"][k] <= 1 < p["claimed"][k] for k in p["truth"])
 
 
 def test_answers_get_better_with_quality_and_hidden_difficulty_is_stable():

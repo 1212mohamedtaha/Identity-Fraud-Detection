@@ -1,297 +1,299 @@
 {
   "questions": {
     "What is the difference between a Docker image and a container?": {
-      "difficulty": 0.8,
+      "difficulty": 0.9,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 881
     },
     "What does the EXPOSE instruction do, and does it publish the port?": {
       "difficulty": 1.4,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 881
     },
     "How do you keep data when a container is removed?": {
-      "difficulty": 3.0,
+      "difficulty": 3.1,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 881
     },
     "What is docker-compose used for?": {
       "difficulty": 2.5,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 881
     },
     "What is the difference between CMD and ENTRYPOINT?": {
       "difficulty": 2.5,
       "discrimination": 1.7,
-      "answers": 799
+      "answers": 881
     },
     "How does layer caching work when building an image, and how do you order a Dockerfile to benefit from it?": {
       "difficulty": 3.8,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 881
     },
     "How do you make a Docker image smaller?": {
-      "difficulty": 4.1,
+      "difficulty": 4.0,
       "discrimination": 0.8,
-      "answers": 799
+      "answers": 881
     },
     "What is the difference between `git fetch` and `git pull`?": {
-      "difficulty": 0.8,
+      "difficulty": 0.9,
       "discrimination": 1.2,
-      "answers": 764
+      "answers": 895
     },
     "What does `git stash` do?": {
       "difficulty": 1.7,
       "discrimination": 1.7,
-      "answers": 764
+      "answers": 895
     },
     "What is the difference between merge and rebase?": {
       "difficulty": 2.4,
       "discrimination": 1.2,
-      "answers": 764
+      "answers": 895
     },
     "How do you undo a commit that is already pushed to a shared branch?": {
       "difficulty": 3.1,
       "discrimination": 1.2,
-      "answers": 764
+      "answers": 895
     },
     "What is a merge conflict and how do you resolve it?": {
-      "difficulty": 2.3,
-      "discrimination": 1.7,
-      "answers": 764
+      "difficulty": 2.2,
+      "discrimination": 1.2,
+      "answers": 895
     },
     "You committed a secret and pushed it. What do you do?": {
-      "difficulty": 4.4,
+      "difficulty": 4.3,
       "discrimination": 0.8,
-      "answers": 764
+      "answers": 895
     },
     "How would you find which commit introduced a bug?": {
-      "difficulty": 3.9,
-      "discrimination": 0.8,
-      "answers": 764
+      "difficulty": 3.7,
+      "discrimination": 1.2,
+      "answers": 895
     },
     "What is the difference between `==` and `===` in JavaScript?": {
-      "difficulty": 1.0,
+      "difficulty": 0.9,
       "discrimination": 1.2,
-      "answers": 747
+      "answers": 902
     },
     "What is the difference between `let`, `const` and `var`?": {
       "difficulty": 1.9,
       "discrimination": 1.7,
-      "answers": 747
+      "answers": 902
     },
     "What is a closure in JavaScript? Give an example of where it is useful.": {
-      "difficulty": 2.1,
+      "difficulty": 2.2,
       "discrimination": 1.2,
-      "answers": 747
+      "answers": 902
     },
     "What does `async`/`await` do?": {
       "difficulty": 3.2,
       "discrimination": 1.2,
-      "answers": 747
+      "answers": 902
     },
     "What is the difference between `null` and `undefined`?": {
-      "difficulty": 3.1,
+      "difficulty": 3.0,
       "discrimination": 1.2,
-      "answers": 747
+      "answers": 902
     },
     "Explain the event loop: in what order do a resolved promise callback and a setTimeout(…, 0) callback run?": {
-      "difficulty": 4.2,
-      "discrimination": 0.8,
-      "answers": 747
+      "difficulty": 3.9,
+      "discrimination": 1.2,
+      "answers": 902
     },
     "What is prototypal inheritance?": {
       "difficulty": 2.8,
       "discrimination": 1.2,
-      "answers": 747
+      "answers": 902
     },
     "What is overfitting and how do you detect it?": {
-      "difficulty": 1.9,
+      "difficulty": 2.0,
       "discrimination": 1.2,
-      "answers": 792
+      "answers": 950
     },
     "What is the difference between supervised and unsupervised learning?": {
-      "difficulty": 1.6,
+      "difficulty": 1.7,
       "discrimination": 1.7,
-      "answers": 792
+      "answers": 950
     },
     "Why is accuracy a poor metric on imbalanced data, and what would you use instead?": {
-      "difficulty": 2.8,
+      "difficulty": 2.9,
       "discrimination": 1.2,
-      "answers": 792
+      "answers": 950
     },
     "Why do you split data into training, validation and test sets?": {
       "difficulty": 2.6,
       "discrimination": 1.2,
-      "answers": 792
+      "answers": 950
     },
     "What does regularization do?": {
       "difficulty": 2.1,
-      "discrimination": 1.7,
-      "answers": 792
+      "discrimination": 1.2,
+      "answers": 950
     },
     "What is data leakage? Give an example.": {
       "difficulty": 3.3,
       "discrimination": 1.2,
-      "answers": 792
+      "answers": 950
     },
     "What is the bias-variance trade-off?": {
       "difficulty": 4.6,
       "discrimination": 0.8,
-      "answers": 792
+      "answers": 950
     },
     "What is the difference between a list and a tuple in Python?": {
-      "difficulty": 2.1,
-      "discrimination": 1.7,
-      "answers": 799
+      "difficulty": 2.2,
+      "discrimination": 1.2,
+      "answers": 940
     },
     "How do you handle an error in Python so the program does not crash?": {
       "difficulty": 1.8,
       "discrimination": 1.7,
-      "answers": 799
+      "answers": 940
     },
     "What does the `yield` keyword do, and why would you use a generator?": {
-      "difficulty": 2.4,
-      "discrimination": 1.2,
-      "answers": 799
-    },
-    "How do you isolate a project's dependencies in Python?": {
       "difficulty": 2.5,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 940
+    },
+    "How do you isolate a project's dependencies in Python?": {
+      "difficulty": 2.6,
+      "discrimination": 1.2,
+      "answers": 940
     },
     "What is a decorator in Python?": {
       "difficulty": 2.5,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 940
     },
     "What is the GIL and how does it affect multi-threaded Python code?": {
-      "difficulty": 4.1,
-      "discrimination": 0.8,
-      "answers": 799
+      "difficulty": 3.9,
+      "discrimination": 1.2,
+      "answers": 940
     },
     "Why is using a mutable default argument like `def f(items=[])` a bug?": {
-      "difficulty": 3.4,
+      "difficulty": 3.5,
       "discrimination": 1.2,
-      "answers": 799
+      "answers": 940
     },
     "What is the difference between props and state in React?": {
-      "difficulty": 1.9,
-      "discrimination": 1.7,
-      "answers": 774
+      "difficulty": 2.0,
+      "discrimination": 1.2,
+      "answers": 916
     },
     "What is JSX?": {
-      "difficulty": 0.7,
+      "difficulty": 0.8,
       "discrimination": 1.2,
-      "answers": 774
+      "answers": 916
     },
     "What is the dependency array of `useEffect` for?": {
       "difficulty": 2.8,
       "discrimination": 1.2,
-      "answers": 774
+      "answers": 916
     },
     "When does a React component re-render?": {
       "difficulty": 2.6,
       "discrimination": 1.2,
-      "answers": 774
+      "answers": 916
     },
     "Why should you not mutate state directly in React?": {
       "difficulty": 2.0,
-      "discrimination": 1.2,
-      "answers": 774
+      "discrimination": 1.7,
+      "answers": 916
     },
     "Why does React need a `key` on list items, and why is the array index a bad key?": {
-      "difficulty": 3.9,
-      "discrimination": 0.8,
-      "answers": 774
+      "difficulty": 3.8,
+      "discrimination": 1.2,
+      "answers": 916
     },
     "How would you share state between many distant components without passing props down every level?": {
       "difficulty": 3.2,
       "discrimination": 1.2,
-      "answers": 774
+      "answers": 916
     },
     "When should an API return 401 versus 403?": {
       "difficulty": 0.9,
       "discrimination": 1.2,
-      "answers": 802
+      "answers": 921
     },
     "Which HTTP method would you use to create, read, update and delete a resource?": {
-      "difficulty": 1.3,
-      "discrimination": 1.7,
-      "answers": 802
+      "difficulty": 1.2,
+      "discrimination": 1.2,
+      "answers": 921
     },
     "What does it mean that PUT is idempotent but POST is not?": {
       "difficulty": 2.1,
       "discrimination": 1.7,
-      "answers": 802
+      "answers": 921
     },
     "What is the difference between PUT and PATCH?": {
       "difficulty": 2.8,
       "discrimination": 1.2,
-      "answers": 802
+      "answers": 921
     },
     "How do you version a public API?": {
-      "difficulty": 2.2,
+      "difficulty": 2.1,
       "discrimination": 1.7,
-      "answers": 802
+      "answers": 921
     },
     "How would you paginate a large, frequently changing list in an API?": {
-      "difficulty": 3.1,
+      "difficulty": 3.2,
       "discrimination": 1.2,
-      "answers": 802
+      "answers": 921
     },
     "How would you protect an API from too many requests by one client?": {
       "difficulty": 3.8,
       "discrimination": 1.2,
-      "answers": 802
+      "answers": 921
     },
     "What is the difference between an INNER JOIN and a LEFT JOIN?": {
       "difficulty": 1.3,
       "discrimination": 1.2,
-      "answers": 823
+      "answers": 939
     },
     "What does a primary key guarantee?": {
       "difficulty": 1.8,
       "discrimination": 1.7,
-      "answers": 823
+      "answers": 939
     },
     "What is the difference between WHERE and HAVING?": {
-      "difficulty": 2.1,
+      "difficulty": 2.2,
       "discrimination": 1.7,
-      "answers": 823
+      "answers": 939
     },
     "Why can an index make a query faster, and what does it cost?": {
       "difficulty": 2.0,
       "discrimination": 1.7,
-      "answers": 823
+      "answers": 939
     },
     "What is a foreign key and what does it protect?": {
-      "difficulty": 2.8,
+      "difficulty": 2.9,
       "discrimination": 1.2,
-      "answers": 823
+      "answers": 939
     },
     "What does transaction isolation mean? Name a problem it prevents.": {
-      "difficulty": 3.2,
+      "difficulty": 3.3,
       "discrimination": 1.2,
-      "answers": 823
+      "answers": 939
     },
     "What is the N+1 query problem and how do you fix it?": {
       "difficulty": 4.8,
       "discrimination": 0.8,
-      "answers": 823
+      "answers": 939
     }
   },
-  "person_spread": 0.476,
+  "person_spread": 0.465,
   "fatigue": 0.03,
   "score_noise": {
-    "llm": 0.16,
-    "keyword": 0.255
+    "llm": 0.158,
+    "keyword": 0.253
   },
   "gap_prior": {
-    "-4": 0.0232,
-    "-3": 0.0521,
-    "-2": 0.0917,
-    "-1": 0.1414,
-    "0": 0.6916
+    "-4": 0.0174,
+    "-3": 0.0407,
+    "-2": 0.0871,
+    "-1": 0.1687,
+    "0": 0.6039,
+    "1": 0.041,
+    "2": 0.0411
   }
 }

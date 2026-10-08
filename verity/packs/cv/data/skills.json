@@ -666,8 +666,9 @@
   "rest-apis": {
     "name": "REST APIs",
     "aliases": [
-      "rest",
+      "rest apis",
       "rest api",
+      "rest",
       "restful",
       "api design",
       "http api"

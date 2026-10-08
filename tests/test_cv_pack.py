@@ -87,3 +87,33 @@ def test_claimed_level_decides_the_verdict():
     assert junior.status == "supported"
     assert senior.status != "supported"
     assert junior.level >= junior.claim.claimed_level
+
+
+@pytest.mark.parametrize("cv,expected", [
+    ("SKILLS\nSQL: 5 years, Python (2 years), 4+ years of Docker",
+     {"sql": "senior", "python": "junior", "docker": "mid"}),
+    ("Skills: REST APIs: 3 years", {"rest-apis": "mid"}),
+    ("- Built services in Django\nSKILLS\nPython - advanced", {"python": "senior"}),   # strongest mention wins
+])
+def test_offline_extraction_reads_years_and_all_mentions(cv, expected):
+    claims = Session(CVPack(), {"cv": cv}).state.claims
+    assert {c.id: c.data["level"] for c in claims} == expected
+
+
+def test_generated_cvs_look_real_and_are_read_correctly():
+    import random
+
+    from verity.packs.cv.cvgen import FILLER_TOOLS
+    from verity.packs.cv.simulate import make_persona
+
+    rng = random.Random(0)
+    for i in range(60):
+        persona = make_persona(rng, i)
+        cv = persona["inputs"]["cv"]
+        assert all(section in cv for section in ("SUMMARY", "EXPERIENCE", "EDUCATION", "SKILLS"))
+        assert "@example.com" in cv
+        claims = Session(CVPack(), persona["inputs"]).state.claims
+        assert {c.id: c.claimed_level for c in claims} == persona["claimed"]
+    for tool in FILLER_TOOLS:                       # filler tools are never mistaken for checked skills
+        with pytest.raises(ValueError):
+            Session(CVPack(), {"cv": f"Skills: {tool}"})
