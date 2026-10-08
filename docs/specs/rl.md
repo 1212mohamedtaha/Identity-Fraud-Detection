@@ -61,4 +61,6 @@ A new policy is an improvement only if its **reward** is higher on the test spli
 
 ## Results
 
-See [../modeling.md](../modeling.md) §13.
+On the CV pack (3,000 test people, keyword grading) the learned policy does **not** beat greedy:
+greedy +0.261, learned +0.199 / +0.232 / +0.228 for seeds 0 / 1 / 2. Greedy stays the default.
+Why, and when RL is expected to pay off: [../modeling.md](../modeling.md) §13.

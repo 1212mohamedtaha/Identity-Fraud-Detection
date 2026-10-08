@@ -304,7 +304,41 @@ extension reduces to the original model for it, and its results are identical.
 
 ## 13. Reinforcement learning results
 
-*Pending: three-seed training run on `datasets/cv-large` (results are added in the next commit).*
+Setup: `verity train cv --data datasets/cv-large --episodes 6000 --eval-every 500` with seeds 0, 1, 2
+(14,000 training people, checkpoints chosen on 1,500 validation people), keyword grading; then all
+policies on the same 3,000 test people (±0.024 on reward).
+
+| Policy | Accuracy | Uncertain | Wrong | Questions | Reward (test) | Best validation reward |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Greedy** (§8) | 65.0% | 29.0% | 6.0% | 6.8 | **+0.261** | +0.266 |
+| Learned, seed 0 | 63.0% | 29.7% | 7.3% | 6.8 | +0.199 | +0.263 |
+| Learned, seed 1 | 62.3% | 32.0% | 5.8% | 6.9 | +0.232 | +0.273 |
+| Learned, seed 2 | 63.4% | 30.1% | 6.5% | 6.8 | +0.228 | +0.268 |
+| Random | 56.7% | 38.1% | 5.3% | 11.3 | +0.087 | – |
+
+**The learned policy does not beat greedy.** Its best validation scores only *equal* greedy's,
+and on the untouched test split all three seeds are below it. Two lessons:
+
+1. **Selection noise is real.** Picking the best of twelve noisy validation scores inflates the
+   winner (+0.27 on validation, +0.20–0.23 on test). Earlier, with only 450 validation people,
+   this produced convincing-looking "wins" that were noise; hence the large dataset (§11).
+2. **With a well-specified belief, greedy information gain is already near-optimal.** RL can
+   only improve on it by exploiting structure that the belief model does not capture. Every time
+   we found such structure (biased evidence, fatigue, base rates, person differences) the right
+   move was to put it **into the belief model**, which improved every policy at once and is
+   explainable, instead of hoping a network learns it implicitly.
+
+**Recommendation.** Keep `greedy` as the default. Keep RL as an optional, measured component;
+it becomes worthwhile when the action space or the world has structure a one-step rule cannot
+use, for example:
+- questions generated on the fly by an LLM (a large action space with uneven quality),
+- costs that differ per question (time, money, candidate stress),
+- multi-step strategies such as "ask an easy warm-up first, because nervous candidates
+  under-perform at the start" (a measured effect the belief does not model),
+- offline RL from logged real sessions, where the simulator is no longer the bottleneck.
+
+The training code, the imitation warm start, checkpoints and the evaluation harness are in place
+for those cases: any new policy must beat greedy on a few thousand held-out test people.
 
 ## 14. Limitations and next steps
 
@@ -316,5 +350,4 @@ extension reduces to the original model for it, and its results are identical.
 - **Fatigue in the belief is a population average**; individual fatigue varies.
 - **Question bank** is small (8 skills × 7 questions); more questions per skill is the most
   direct way to reduce "uncertain".
-- **RL** can only be as good as the simulator; with a well-specified belief model the greedy
-  information rule is already a strong policy (§13).
+- **RL** currently does not beat greedy (§13); it is kept as an optional, measured component.
