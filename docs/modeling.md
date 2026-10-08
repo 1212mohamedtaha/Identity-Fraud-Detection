@@ -351,3 +351,4 @@ for those cases: any new policy must beat greedy on a few thousand held-out test
 - **Question bank** is small (8 skills × 7 questions); more questions per skill is the most
   direct way to reduce "uncertain".
 - **RL** currently does not beat greedy (§13); it is kept as an optional, measured component.
+  How to make it worthwhile: [rl-improvements.md](rl-improvements.md).
