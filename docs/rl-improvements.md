@@ -41,8 +41,9 @@ improvements below make the problem one where it does.
 
 ## Improvements
 
-Ordered by expected value. Each one is a change to the *world* (simulator, rewards, actions),
-except the last group, which improves the *training*.
+Ordered roughly by expected value. Each one is a change to the *world* (simulator, rewards,
+actions), except the last group, which improves the *training*. #8 (graph-guided questioning)
+is the long-term direction that ties most of the others together.
 
 ### 1. Questions with different costs ⭐
 Real interviews mix 30-second questions with 10-minute tasks.
@@ -92,7 +93,55 @@ The simulator is the real limit: RL is only as good as the world it trains in.
 - **Why it matters:** real data contains effects we did not think to model; that is where a learned
   policy has the most to gain.
 
-### 8. Better training (helps, but not enough on its own)
+### 8. Graph-guided questioning: drill down and grow the graph ⭐
+This was the original idea of the project, and it is the most natural place for RL.
+
+**What exists today**
+- The original identity model (`packs/identity/legacy/`) already picks *graph nodes*: a
+  manager chooses a personal attribute node, a worker chooses a neighbouring place node, with a
+  GNN embedding the graph. But it only goes **one hop** and never creates nodes.
+- In Verity the knowledge graph is built (CV pack: skill → topic nodes such as "joins",
+  "indexes", "transactions") but **not used for questioning**: probes come from a fixed bank,
+  topics are not linked to questions, and every policy (greedy or RL) only picks from a fixed
+  candidate list or stops. No policy walks the graph, goes deeper on a weak spot, or adds nodes.
+
+**The idea**
+Questioning becomes navigation of the knowledge graph, like a good interviewer:
+"SQL → indexes → why are writes slower with an index? → covering indexes".
+- **Actions** (hierarchical, like the original manager/worker design):
+  1. choose a claim / top node (manager),
+  2. choose a node to probe: stay, go **deeper** (child topic), go **sideways** (related or
+     prerequisite topic), or **back up**,
+  3. **expand**: ask an LLM to create a new sub-topic node and its question when the graph has
+     no deeper node (the mock LLM does this in simulation, from a topic list),
+  4. stop.
+- **State**: the belief per node, plus graph structure. A GNN (as in the original model, now
+  with relation types) summarises "what we know where".
+
+**What else it needs**
+- **Topic-level belief**: a level per topic node, linked to its skill and to related topics (a
+  child topic's knowledge informs its parent; prerequisites constrain each other). Without this,
+  drilling down tells the model nothing new.
+- **Topic-level simulator**: personas know some topics deeply and others not at all (real
+  "patchy" knowledge), so drilling down has something to discover.
+- **Graph-aware greedy baseline**: one-step information gain over neighbouring nodes, so RL is
+  compared with a fair rule and not with one that cannot walk the graph.
+- Question bank or LLM questions tagged with their topic node.
+
+**Why it should make the solution better**
+- Finds the real edge of someone's knowledge with fewer, more targeted questions.
+- Much better coaching feedback: "solid on joins, weak on transactions", not only "mid-level SQL".
+- Harder to game: follow-up questions depend on earlier answers.
+
+**Why it makes RL worthwhile**
+Going deeper pays off only several questions later, and expanding the graph creates actions
+that did not exist before. That is multi-step planning over a large, structured, changing action
+space: exactly where a one-step rule is weak and a learned (hierarchical) policy can win.
+
+**Measure:** reward, questions, and topic-level accuracy (did we find the right weak and strong
+topics?) against the graph-aware greedy baseline, on held-out personas, at least three seeds.
+
+### 9. Better training (helps, but not enough on its own)
 - **Train against greedy, not against zero.** Play greedy and the learned policy on the *same*
   candidate and reward the difference. This removes most of the noise (paired comparison).
 - **Fine-tune slowly from the greedy copy** and stop when validation gets worse.
@@ -110,6 +159,9 @@ The simulator is the real limit: RL is only as good as the world it trains in.
 4. Accept RL only if it beats both greedy baselines on a few thousand held-out test candidates
    (reward ± 0.024), across at least three seeds.
 5. In parallel, prepare #7 (consented session logging), which unlocks everything else.
+6. Then move to #8, graph-guided questioning: topic-level belief and simulator first, a
+   graph-aware greedy baseline second, then a hierarchical RL policy that navigates and grows
+   the graph.
 
 ## How we will know it worked
 
