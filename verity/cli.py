@@ -5,6 +5,7 @@
     verity play cv --input cv=@my_cv.txt       answer questions in the terminal
     verity evaluate identity                   compare policies on simulated people
     verity train identity --episodes 2000      train an RL policy (saved to models/)
+    verity data generate cv --size 3000        make a synthetic dataset (datasets/cv/)
 """
 import argparse
 import logging
@@ -68,27 +69,67 @@ def cmd_play(args):
         print("  note:", note)
 
 
-def cmd_evaluate(args):
-    from .core.simulation import evaluate
+def simulation_pack(args):
+    """The pack used for simulations: never a real LLM; optionally the pack's mock LLM."""
     from .packs import get_pack
 
-    pack = get_pack(args.pack)       # offline: simulations never call an LLM
+    pack = get_pack(args.pack)
+    if getattr(args, "mock_llm", False):
+        pack.llm = pack.mock_llm(seed=args.seed)
+        if pack.llm is None:
+            raise SystemExit(f"Pack {pack.name!r} has no mock LLM.")
+    return pack
+
+
+def dataset_cases(args, split):
+    from .core.dataset import load_cases
+
+    if not args.data:
+        return None
+    cases = load_cases(args.data, split)
+    if not cases:
+        raise SystemExit(f"No {split!r} cases in {args.data}.")
+    return cases
+
+
+def cmd_evaluate(args):
+    from .core.simulation import evaluate
+
+    pack = simulation_pack(args)
+    cases = dataset_cases(args, args.split)
+    if cases:
+        print(f"{len(cases)} {args.split} cases from {args.data}")
     policies = args.policies or pack.policy_names()
     print(f"{'policy':10} {'accuracy':>9} {'uncertain':>10} {'wrong':>7} {'questions':>10} {'reward':>7}")
     for name in policies:
-        r = evaluate(pack, name, episodes=args.episodes, seed=args.seed)
+        r = evaluate(pack, name, episodes=args.episodes, seed=args.seed, cases=cases)
         print(f"{name:10} {r['accuracy']:9.1%} {r['uncertain']:10.1%} {r['wrong']:7.1%} "
               f"{r['avg_questions']:10.1f} {r['reward']:+7.3f}")
 
 
 def cmd_train(args):
-    from .packs import get_pack
     from .rl.train import train
 
-    pack = get_pack(args.pack)
+    pack = simulation_pack(args)
     out = args.out or pack.learned_policy_path()
-    train(pack, episodes=args.episodes, lr=args.lr, question_cost=args.question_cost, seed=args.seed, out=out)
+    train(pack, episodes=args.episodes, lr=args.lr, question_cost=args.question_cost, seed=args.seed, out=out,
+          cases=dataset_cases(args, "train"))
     print(f"Saved the trained policy to {out}. Compare it with: verity evaluate {pack.name}")
+
+
+def cmd_data_generate(args):
+    from .core.dataset import generate_dataset
+    from .packs import get_pack
+
+    pack = get_pack(args.pack)
+    out = Path(args.out or Path("datasets") / pack.name)
+    cases = generate_dataset(pack, args.size, args.seed, out)
+    print(f"Wrote {len(cases)} cases to {out}/ (train 70%, val 15%, test 15%).")
+
+
+def add_simulation_options(p):
+    p.add_argument("--data", help="dataset folder (from `verity data generate`); default: fresh simulated people")
+    p.add_argument("--mock-llm", action="store_true", help="run the pack's LLM code path with its mock LLM")
 
 
 def main(argv=None):
@@ -114,6 +155,8 @@ def main(argv=None):
     p.add_argument("--policies", nargs="*", help="default: every policy the pack offers")
     p.add_argument("--episodes", type=int, default=300)
     p.add_argument("--seed", type=int, default=1)
+    p.add_argument("--split", default="test", choices=["train", "val", "test"], help="dataset split (with --data)")
+    add_simulation_options(p)
     p.set_defaults(func=cmd_evaluate)
 
     p = sub.add_parser("train", help="train an RL policy on simulated people")
@@ -123,7 +166,16 @@ def main(argv=None):
     p.add_argument("--question-cost", type=float, default=0.02, help="reward penalty per question asked")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", help="default: models/<pack>/policy.pt")
+    add_simulation_options(p)
     p.set_defaults(func=cmd_train)
+
+    data = sub.add_parser("data", help="synthetic datasets").add_subparsers(dest="data_command", required=True)
+    p = data.add_parser("generate", help="generate a synthetic dataset")
+    p.add_argument("pack")
+    p.add_argument("--size", type=int, default=3000)
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--out", help="default: datasets/<pack>")
+    p.set_defaults(func=cmd_data_generate)
 
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")

@@ -101,7 +101,8 @@ out by one answer. `s = 1` is a pass, `s = 0` a fail, `s = 0.5` is neutral.
 `DomainPack` attributes: `name`, `title`, `description`, `input_fields`, `max_questions`,
 `show_feedback`, `prior`, `accept`, `reject`.
 Required overrides: `claim_extractor()`, `knowledge_source()`, `probe_generator()`, `sample_case(rng)`.
-Optional overrides: `assessor()`, `belief_model()`, `policy(name, rng)`, `policy_names()`, `respondent(truth, rng)`.
+Optional overrides: `assessor()`, `belief_model()`, `policy(name, rng)`, `policy_names()`,
+`respondent(truth, rng, case)`, `make_case(rng, index)`, `write_dataset_extras(cases, out, rng)`, `mock_llm(seed)`.
 The constructor takes `llm` (an `LLM` or `None`).
 
 `input_fields` items: `{"name", "label", "type": "text"|"textarea", "required", "placeholder"}`.
@@ -115,9 +116,12 @@ The UI renders them as the start form; their values arrive as `inputs[name]` (st
 - `StatisticalRespondent(truth_levels, rng, spread=0.1)`: passes a probe with
   `probe.pass_rates[real level]`, shifted by a per-person offset in `[-spread, spread]`. Passing means
   answering `probe.answer`; failing means a wrong choice, or "I'm not sure." for free text.
-- `run_episode(pack, policy, rng) -> (session, truth)`.
+- `run_episode(pack, policy, rng, case=None) -> (session, truth levels)`: plays a dataset case,
+  or a fresh `pack.make_case(rng, 0)`; the respondent is `pack.respondent(truth, rng, case)`.
 - `episode_reward(session, truth)`: `+1` correct, `-0.25` uncertain, `-1` wrong, minus `0.02` per question.
-- `evaluate(pack, policy_name, episodes, seed)` → accuracy, uncertain, wrong, avg_questions, reward.
+- `evaluate(pack, policy_name, episodes, seed, cases=None)` → accuracy, uncertain, wrong,
+  avg_questions, reward. With `cases`, plays each case once.
+- Datasets: see [dataset.md](dataset.md).
   The expected verdict is `supported` when every claim holds at the person's real level, otherwise `refuted`.
 
 ## Knowledge graph (`graph.py`)

@@ -41,17 +41,19 @@ Pass rates per level come from `irt_pass_rates(5, difficulty_level)`:
 | medium | 2.5 | 0.06 | 0.12 | 0.32 | 0.68 | 0.88 |
 | hard | 3.5 | 0.05 | 0.06 | 0.12 | 0.32 | 0.68 |
 
-`max_questions = 12`, `show_feedback = True`, `accept = 0.85`, `reject = 0.15`.
+`max_questions = 15`, `show_feedback = True`, `accept = 0.85`, `reject = 0.15`.
 
 ## Question bank (`data/skills.json`)
 `{key: {name, aliases, topics, questions: [{difficulty, question, answer, keywords}]}}`.
 Every model answer must contain all of its keywords (a test checks this).
-Skills: Python, SQL, JavaScript, React, Docker, Git, machine learning, REST APIs.
+Skills: Python, SQL, JavaScript, React, Docker, Git, machine learning, REST APIs; 7 questions
+each (2 easy, 3 medium, 2 hard), 56 in total.
 
 ## Simulation
-`sample_case`: 3 random bank skills with real levels beginner..senior. 60% of candidates
-claim their real levels; the rest claim 1–2 levels more. The CV reads
-"Software engineer. Skills: senior Python, junior SQL, …".
+Synthetic candidates (personas with honesty type, real vs claimed levels, sharpness, fatigue,
+look-up habit), their answers, and a mock LLM: see [dataset.md](dataset.md).
+`make_case` creates a persona; `respondent` plays it (`PersonaRespondent`); `mock_llm` returns
+`MockInterviewLLM`; `write_dataset_extras` writes `answers.jsonl` and `questions.json`.
 
 ## Safety
 CV, job and answers are passed to prompts inside tags (`<cv>`, `<job>`, `<answer>`), and

@@ -1,0 +1,10 @@
+{
+  "pack": "cv",
+  "size": 60,
+  "seed": 0,
+  "splits": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  }
+}

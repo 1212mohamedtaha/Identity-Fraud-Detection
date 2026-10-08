@@ -79,7 +79,18 @@ verity evaluate identity          # now also lists "learned"
 ```
 
 Use it in the web app ("Question strategy") or with `verity play identity --policy learned`.
-Step-by-step guide: [docs/guides/training.md](docs/guides/training.md).
+
+For the CV pack, train and test on a **synthetic dataset** of simulated candidates
+(honest, exaggerating, impostors), with a mock LLM standing in for the real one:
+
+```bash
+verity data generate cv --size 3000                       # -> datasets/cv/ (train/val/test)
+verity train cv --data datasets/cv --mock-llm
+verity evaluate cv --data datasets/cv --mock-llm          # scored on the held-out test split
+```
+
+Step-by-step guide: [docs/guides/training.md](docs/guides/training.md); what the data
+contains: [docs/specs/dataset.md](docs/specs/dataset.md).
 
 ## 6. Test
 

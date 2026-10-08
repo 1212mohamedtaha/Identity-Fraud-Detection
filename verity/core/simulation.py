@@ -31,7 +31,7 @@ def true_levels(truth, claims):
     """
     levels = {}
     for claim in claims:
-        value = truth[claim.id]
+        value = truth.get(claim.id, False)       # a claim the truth does not mention is false
         if isinstance(value, bool):
             value = claim.claimed_level if value else max(claim.claimed_level - 1, 0)
         levels[claim.id] = value
@@ -69,30 +69,35 @@ def expected_status(truth, claims):
     return SUPPORTED if all(c.holds_at(truth[c.id]) for c in claims) else REFUTED
 
 
-def run_episode(pack, policy, rng):
-    """Play one simulated session. Returns (session, truth as real levels)."""
+def run_episode(pack, policy, rng, case=None):
+    """Play one simulated session with ``case`` (from a dataset) or a freshly made one.
+    Returns (session, truth as real levels)."""
     from .engine import Session
 
-    inputs, truth = pack.sample_case(rng)
-    session = Session(pack, inputs, policy=policy)
-    truth = true_levels(truth, session.state.claims)
-    respondent = pack.respondent(truth, rng)
+    case = case or pack.make_case(rng, 0)
+    session = Session(pack, case["inputs"], policy=policy)
+    truth = true_levels(case["truth"], session.state.claims)
+    respondent = pack.respondent(truth, rng, case)
     while not session.finished:
         session.answer(respondent.answer(session.current))
     return session, truth
 
 
-def evaluate(pack, policy_name, episodes=200, seed=0):
-    """Run ``episodes`` simulated sessions and summarise how well the policy did.
+def evaluate(pack, policy_name, episodes=200, seed=0, cases=None):
+    """Run simulated sessions and summarise how well the policy did.
 
-    ``reward`` is the average of the score RL training maximises (see episode_reward).
+    With ``cases`` (e.g. a dataset's test split) every case is played once; otherwise
+    ``episodes`` fresh people are made. ``reward`` is the average of the score RL
+    training maximises (see episode_reward).
     """
     rng = random.Random(seed)
     correct = uncertain = wrong = questions = 0
     total_reward = 0.0
-    for _ in range(episodes):
+    plan = cases if cases is not None else [None] * episodes
+    episodes = len(plan)
+    for case in plan:
         policy = pack.policy(policy_name, rng=rng)
-        session, truth = run_episode(pack, policy, rng)
+        session, truth = run_episode(pack, policy, rng, case)
         status = session.verdict.status
         questions += len(session.history)
         total_reward += episode_reward(session, truth)

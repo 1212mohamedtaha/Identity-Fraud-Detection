@@ -251,7 +251,7 @@ class CVPack(DomainPack):
         {"name": "job", "label": "Job description (optional)", "type": "textarea", "required": False,
          "placeholder": "Paste the job you are applying for…"},
     ]
-    max_questions = 12
+    max_questions = 15
     show_feedback = True
     accept = 0.85
     reject = 0.15
@@ -268,15 +268,28 @@ class CVPack(DomainPack):
     def assessor(self):
         return AnswerGrader(self.llm)
 
+    # ----- simulation: synthetic candidates (see simulate.py and docs/specs/dataset.md)
+    def make_case(self, rng, index):
+        from .simulate import make_persona
+        return make_persona(rng, index)
+
     def sample_case(self, rng):
-        """A simulated candidate: real levels per skill; 60% describe themselves honestly,
-        the rest claim one or two levels more than they have."""
-        keys = rng.sample(sorted(skill_bank()), 3)
-        honest = rng.random() < 0.6
-        parts, truth = [], {}
-        for key in keys:
-            real = rng.randint(1, len(LEVELS) - 1)
-            claimed = real if honest else min(real + rng.randint(1, 2), len(LEVELS) - 1)
-            truth[key] = real
-            parts.append(f"{LEVELS[claimed]} {skill_bank()[key]['name']}")
-        return {"cv": "Software engineer. Skills: " + ", ".join(parts) + "."}, truth
+        case = self.make_case(rng, 0)
+        return case["inputs"], case["truth"]
+
+    def respondent(self, truth, rng=None, case=None):
+        from .simulate import MockInterviewLLM, PersonaRespondent
+        if case is None or "traits" not in case:
+            return super().respondent(truth, rng, case)
+        index = self.llm.quality_index if isinstance(self.llm, MockInterviewLLM) else None
+        return PersonaRespondent(case, rng, index)
+
+    def mock_llm(self, seed=0):
+        import random
+
+        from .simulate import MockInterviewLLM
+        return MockInterviewLLM(random.Random(seed))
+
+    def write_dataset_extras(self, cases, out, rng):
+        from .simulate import write_answers
+        write_answers(cases, out, rng)

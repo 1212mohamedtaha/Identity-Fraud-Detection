@@ -18,6 +18,7 @@ knowledge, questions and grading. `README.md` has the user view.
 | Terminal session | `verity play cv --input cv=@file.txt` |
 | Compare policies | `verity evaluate <pack>` |
 | Train the RL policy | `verity train <pack> --episodes 2000` |
+| Synthetic dataset | `verity data generate cv --size 3000` (then `--data datasets/cv` on train/evaluate) |
 
 Run `pytest` and `ruff check .` before every commit. Both must pass.
 
@@ -28,6 +29,7 @@ Run `pytest` and `ruff check .` before every commit. Both must pass.
 | LLM providers and prompt helpers | `verity/llm/` | `docs/specs/llm.md` |
 | RL features, network, training | `verity/rl/` | `docs/specs/rl.md` |
 | HTTP API and web UI | `verity/api/`, `verity/web/` | `docs/specs/api.md` |
+| Datasets and simulated people | `verity/core/dataset.py`, `verity/packs/cv/simulate.py` | `docs/specs/dataset.md` |
 | Identity pack (original model in `legacy/`) | `verity/packs/identity/` | `docs/specs/pack-identity.md` |
 | CV pack | `verity/packs/cv/` | `docs/specs/pack-cv.md` |
 | Why things are the way they are | `docs/decisions/` | — |

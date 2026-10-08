@@ -19,7 +19,9 @@ from .policy import LearnedPolicy, PolicyNet, save_policy
 
 
 def train(pack, episodes=2000, lr=0.01, question_cost=QUESTION_COST, entropy_bonus=0.01,
-          seed=0, out=None, log_every=200, log=print):
+          seed=0, out=None, log_every=200, log=print, cases=None):
+    """Train a policy. With ``cases`` (a dataset's train split) each episode plays a random
+    case from it; otherwise every episode makes a fresh simulated person."""
     torch.manual_seed(seed)
     rng = random.Random(seed)
     net = PolicyNet()
@@ -29,7 +31,8 @@ def train(pack, episodes=2000, lr=0.01, question_cost=QUESTION_COST, entropy_bon
 
     for episode in range(1, episodes + 1):
         policy = LearnedPolicy(net, explore=True)
-        session, truth = run_episode(pack, policy, rng)
+        case = rng.choice(cases) if cases else None
+        session, truth = run_episode(pack, policy, rng, case)
         reward = episode_reward(session, truth, question_cost)
 
         if policy.log_probs:
