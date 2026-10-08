@@ -34,7 +34,7 @@ only place they meet, so each can be replaced on its own.
 | `KnowledgeSource` | claims → knowledge graph | – | places near each attribute | skill → topic graph |
 | `ProbeGenerator` | graph → candidate probes | – | multiple-choice questions | LLM interview questions (question bank offline) |
 | `Assessor` | answer → score 0..1 | `ChoiceAssessor` (exact match) | default | LLM rubric grading (keywords offline) |
-| `BeliefModel` | scores → probability per claim | Bayesian log-odds | default | default (stricter thresholds) |
+| `BeliefModel` | scores → probability per level of each claim | Bayesian, yes/no or leveled claims | default (yes/no) | default with skill levels (stricter thresholds) |
 | `Policy` | which probe next, or stop | `greedy`, `random`, `learned` | + `legacy` (original RL model) | default |
 | `Respondent` | simulated person for training | `StatisticalRespondent` | default | default |
 

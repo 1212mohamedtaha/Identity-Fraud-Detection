@@ -48,7 +48,8 @@ def test_llm_versions_of_every_block():
 
     llm = FakeLLM(reply)
     session = Session(CVPack(llm=llm), {"cv": "Senior Rust engineer"})
-    assert session.state.claims[0].text == "Knows Rust (senior)"
+    assert session.state.claims[0].text == "Knows Rust at senior level"
+    assert session.state.claims[0].claimed_level == 4
     assert session.current.question == "Explain ownership."
     observation = session.answer("Each value has an owner; you can borrow it.")
     assert observation.score == 0.9 and observation.feedback == "Good."
@@ -61,3 +62,28 @@ def test_llm_failures_fall_back_to_offline_logic():
     assert session.state.claims and session.current is not None
     observation = session.answer("mutable immutable hashable")
     assert 0.0 <= observation.score <= 1.0
+
+
+@pytest.mark.parametrize("cv,expected", [
+    ("Skills: senior Python, junior SQL, Docker (mid), React",
+     {"python": "senior", "sql": "junior", "docker": "mid", "react": "junior"}),
+    ("Expert in Git; Python - beginner", {"git": "senior", "python": "beginner"}),
+])
+def test_offline_extraction_reads_levels_next_to_skills(cv, expected):
+    claims = Session(CVPack(), {"cv": cv}).state.claims
+    assert {c.id: c.data["level"] for c in claims} == expected
+
+
+def test_claimed_level_decides_the_verdict():
+    """The same answers support a junior claim but not a senior one."""
+    def run(level):
+        session = Session(CVPack(), {"cv": f"{level} SQL"})
+        while not session.finished:
+            probe = session.current
+            session.answer(probe.answer if probe.difficulty != "hard" else "no idea")
+        return session.verdict.claims[0]
+
+    junior, senior = run("junior"), run("senior")
+    assert junior.status == "supported"
+    assert senior.status != "supported"
+    assert junior.claim.levels[junior.level] in ("mid", "senior")

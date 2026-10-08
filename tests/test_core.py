@@ -2,10 +2,10 @@ import random
 
 import pytest
 
-from verity.core.belief import BeliefModel
+from verity.core.belief import BeliefModel, irt_pass_rates
 from verity.core.engine import Session, SessionError
 from verity.core.policies import GreedyPolicy
-from verity.core.simulation import StatisticalRespondent, evaluate
+from verity.core.simulation import StatisticalRespondent, evaluate, true_levels
 from verity.core.types import REFUTED, SUPPORTED, Claim, Observation, Probe
 
 
@@ -83,13 +83,39 @@ def test_no_claims_is_an_error(toy):
         Session(toy, {"topics": "unknown"})
 
 
-def test_respondent_follows_the_truth():
+def test_respondent_answers_by_its_real_level():
     rng = random.Random(0)
-    good = StatisticalRespondent({"c": True}, rng, spread=0)
-    p = Probe(id="p", claim_id="c", question="?", answer="ok", p_true=1.0, p_false=0.0)
-    assert good.answer(p) == "ok"
-    bad = StatisticalRespondent({"c": False}, rng, spread=0)
-    assert bad.answer(p) != "ok"
+    p = Probe(id="p", claim_id="c", question="?", answer="ok", pass_rates=[0.0, 1.0])
+    assert StatisticalRespondent({"c": 1}, rng, spread=0).answer(p) == "ok"
+    assert StatisticalRespondent({"c": 0}, rng, spread=0).answer(p) != "ok"
+
+
+def test_true_levels_accepts_bools_and_levels():
+    yes_no = Claim("a", "yes/no claim")
+    leveled = Claim("b", "skill", levels=("none", "junior", "senior"), claimed_level=2)
+    assert true_levels({"a": True, "b": 1}, [yes_no, leveled]) == {"a": 1, "b": 1}
+    assert true_levels({"a": False, "b": True}, [yes_no, leveled]) == {"a": 0, "b": 2}
+
+
+def test_leveled_claim_needs_evidence_at_the_claimed_level():
+    claim = Claim("s", "Knows SQL", levels=("none", "junior", "mid", "senior"), claimed_level=3)
+    belief = BeliefModel()
+    belief.start([claim])
+    assert belief.probability("s") == pytest.approx(0.5)      # prior: 50% that it holds
+    easy = Probe(id="e", claim_id="s", question="?", pass_rates=irt_pass_rates(4, difficulty=0.5))
+    hard = Probe(id="h", claim_id="s", question="?", pass_rates=irt_pass_rates(4, difficulty=2.5))
+    assert belief.expected_gain(hard) > belief.expected_gain(easy)
+    for _ in range(3):
+        belief.update(easy, Observation("e", "s", "x", 1.0))
+    assert belief.level("s") >= 1 and belief.status("s") != SUPPORTED   # easy passes are not enough
+    for _ in range(3):
+        belief.update(hard, Observation("h", "s", "x", 1.0))
+    assert belief.status("s") == SUPPORTED and belief.level("s") == 3
+
+
+def test_irt_pass_rates_rise_with_level():
+    rates = irt_pass_rates(5, difficulty=2)
+    assert rates == sorted(rates) and rates[2] == pytest.approx(0.5)
 
 
 def test_greedy_beats_random_on_simulated_people(toy):

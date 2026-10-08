@@ -2,6 +2,7 @@
 
     claims -> knowledge graph -> probes -> [policy picks probe -> answer -> assess -> update belief]* -> verdict
 """
+from .belief import default_pass_rates
 from .types import REFUTED, SUPPORTED, UNCERTAIN, ClaimResult, SessionState, Turn, Verdict
 
 
@@ -29,6 +30,10 @@ class Session:
             raise ValueError("No claims found to verify.")
         graph = pack.knowledge_source().build(claims, inputs)
         probes = pack.probe_generator().generate(claims, graph)
+        by_id = {claim.id: claim for claim in claims}
+        for probe in probes:
+            if not probe.pass_rates:
+                probe.pass_rates = default_pass_rates(by_id[probe.claim_id], probe)
         belief = pack.belief_model()
         belief.start(claims)
 
@@ -87,12 +92,15 @@ def build_verdict(state):
         turns = [t for t in state.history if t.probe.claim_id == claim.id]
         passed = sum(t.observation.score for t in turns)
         probability = belief.probability(claim.id)
+        level = belief.level(claim.id)
         if turns:
-            explanation = (f"{passed:g} of {len(turns)} answers passed; "
-                           f"{probability:.0%} likely true.")
+            explanation = f"{passed:g} of {len(turns)} answers passed; {probability:.0%} likely true."
+            if not claim.is_yes_no:
+                explanation += (f" Most likely level: {claim.levels[level]}"
+                                f" (claimed: {claim.levels[claim.claimed_level]}).")
         else:
             explanation = "Not tested."
-        results.append(ClaimResult(claim, probability, belief.status(claim.id), len(turns), explanation))
+        results.append(ClaimResult(claim, probability, belief.status(claim.id), len(turns), explanation, level))
 
     statuses = [r.status for r in results]
     if REFUTED in statuses:

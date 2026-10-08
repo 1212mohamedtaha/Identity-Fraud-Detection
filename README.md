@@ -11,7 +11,7 @@ The core knows nothing about any domain. Each use case is a **domain pack**:
 | Pack | What it checks | Questions | Grading |
 | --- | --- | --- | --- |
 | `identity` | Where you work, studied, live, were born | Multiple choice about nearby places | Exact match |
-| `cv` | The skills your CV claims | Free-text interview questions | LLM rubric grading (keywords offline) |
+| `cv` | The skills and levels your CV claims ("senior Python") | Free-text interview questions | LLM rubric grading (keywords offline) |
 
 Both run **with no API key** (offline mode). With an LLM configured, the CV pack reads
 the CV, writes questions about *your* projects and grades answers properly.

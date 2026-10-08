@@ -54,6 +54,8 @@ class ClaimOut(BaseModel):
     probability: float
     questions: int
     explanation: str
+    level: Optional[str] = None           # most likely real level (leveled claims only)
+    claimed_level: Optional[str] = None
 
 
 class VerdictOut(BaseModel):
@@ -116,9 +118,15 @@ def session_out(session_id, session):
     verdict = None
     if session.verdict:
         v = session.verdict
-        verdict = VerdictOut(status=v.status, probability=v.probability, notes=v.notes, claims=[
-            ClaimOut(id=r.claim.id, text=r.claim.text, status=r.status, probability=r.probability,
-                     questions=r.questions, explanation=r.explanation) for r in v.claims])
+        claims = []
+        for r in v.claims:
+            leveled = not r.claim.is_yes_no
+            claims.append(ClaimOut(
+                id=r.claim.id, text=r.claim.text, status=r.status, probability=r.probability,
+                questions=r.questions, explanation=r.explanation,
+                level=r.claim.levels[r.level] if leveled and r.questions else None,
+                claimed_level=r.claim.levels[r.claim.claimed_level] if leveled else None))
+        verdict = VerdictOut(status=v.status, probability=v.probability, notes=v.notes, claims=claims)
     return SessionOut(id=session_id, pack=pack.name, policy=session.policy.name,
                       finished=session.finished, show_feedback=pack.show_feedback,
                       asked=len(session.history), max_questions=session.state.max_questions,

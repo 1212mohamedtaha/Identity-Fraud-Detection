@@ -33,7 +33,9 @@ Start: `verity serve` (or `uvicorn verity.api.app:create_app --factory`).
 }
 ```
 When finished, `question` is `null` and `verdict` is
-`{status, probability, claims: [{id, text, status, probability, questions, explanation}], notes: [str]}`.
+`{status, probability, claims: [{id, text, status, probability, questions, explanation, level, claimed_level}], notes: [str]}`.
+`level` (most likely real level) and `claimed_level` are level names for leveled claims, `null`
+for yes/no claims (and `level` is `null` for untested claims).
 
 For packs with `show_feedback = false` (identity), `score` and `feedback` are always
 `null`, so the API never reveals which answers were right.

@@ -11,6 +11,7 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+from ...core.belief import irt_pass_rates
 from ...core.graph import KnowledgeGraph
 from ...core.interfaces import Assessor, ClaimExtractor, KnowledgeSource, ProbeGenerator
 from ...core.pack import DomainPack
@@ -22,12 +23,29 @@ HERE = Path(__file__).parent
 PROMPTS = HERE / "prompts"
 MAX_CLAIMS = 4
 
-# How likely someone passes a question of each difficulty if they do / do not have the skill.
-PASS_RATES = {
-    "easy": (0.90, 0.45),
-    "medium": (0.80, 0.30),
-    "hard": (0.65, 0.15),
+# Skill levels, lowest first. A claim "knows SQL at mid level" holds for mid and senior.
+LEVELS = ("none", "beginner", "junior", "mid", "senior")
+DEFAULT_LEVEL = "junior"          # assumed when the CV does not say
+LEVEL_WORDS = {
+    "beginner": "beginner", "basic": "beginner", "entry-level": "beginner",
+    "junior": "junior",
+    "mid": "mid", "mid-level": "mid", "intermediate": "mid",
+    "senior": "senior", "expert": "senior", "advanced": "senior", "lead": "senior",
 }
+
+# The level at which someone has a 50/50 chance of passing a question of each difficulty.
+DIFFICULTY_LEVEL = {"easy": 1.5, "medium": 2.5, "hard": 3.5}
+
+
+def level_index(word):
+    return LEVELS.index(LEVEL_WORDS.get(str(word).lower().strip(), DEFAULT_LEVEL))
+
+
+def skill_claim(claim_id, skill, level_word, evidence="", bank=None):
+    level = level_index(level_word)
+    return Claim(id=claim_id, text=f"Knows {skill} at {LEVELS[level]} level", kind="skill",
+                 levels=LEVELS, claimed_level=level,
+                 data={"skill": skill, "level": LEVELS[level], "evidence": evidence, "bank": bank})
 
 
 @lru_cache(maxsize=None)
@@ -49,8 +67,27 @@ def bank_key(skill_name):
     return None
 
 
+def find(text, alias):
+    """``(start, end)`` of ``alias`` as a whole word in ``text``, or None."""
+    match = re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", text)
+    return match.span() if match else None
+
+
 def mentions(text, alias):
-    return re.search(r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])", text) is not None
+    return find(text, alias) is not None
+
+
+def level_near(text, span):
+    """The level word directly before a skill ("senior Python", "expert in Git") or directly
+    after it ("Python (senior)", "Python - senior"). Defaults to DEFAULT_LEVEL."""
+    start, end = span
+    before = re.search(r"([a-z-]+)\s+(?:(?:in|with|at)\s+)?$", text[:start])
+    if before and before.group(1) in LEVEL_WORDS:
+        return before.group(1)
+    after = re.match(r"\s*[(:–-]?\s*([a-z-]+)", text[end:])
+    if after and after.group(1) in LEVEL_WORDS:
+        return after.group(1)
+    return DEFAULT_LEVEL
 
 
 # ---------------------------------------------------------------- claims
@@ -78,26 +115,23 @@ class CVClaims(ClaimExtractor):
             skill = str(item.get("skill", "")).strip()
             if not skill or any(c.id == slug(skill) for c in claims):
                 continue
-            level = str(item.get("level", "unspecified"))
-            text = f"Knows {skill}" + (f" ({level})" if level != "unspecified" else "")
-            claims.append(Claim(id=slug(skill), text=text, kind="skill", data={
-                "skill": skill, "level": level, "evidence": str(item.get("evidence", "")),
-                "bank": bank_key(skill),
-            }))
+            claims.append(skill_claim(slug(skill), skill, item.get("level", DEFAULT_LEVEL),
+                                      str(item.get("evidence", "")), bank_key(skill)))
         return claims
 
     def extract_with_keywords(self, cv, job):
         cv_text, job_text = cv.lower(), job.lower()
         found = []
         for key, skill in skill_bank().items():
-            if any(mentions(cv_text, alias) for alias in skill["aliases"]):
+            spans = [find(cv_text, alias) for alias in skill["aliases"]]
+            spans = [span for span in spans if span]
+            if spans:
                 wanted = any(mentions(job_text, alias) for alias in skill["aliases"])
-                found.append((not wanted, key))      # skills the job wants come first
+                found.append((not wanted, key, min(spans)))     # skills the job wants come first
         claims = []
-        for _, key in sorted(found)[:MAX_CLAIMS]:
+        for _, key, span in sorted(found)[:MAX_CLAIMS]:
             name = skill_bank()[key]["name"]
-            claims.append(Claim(id=key, text=f"Knows {name}", kind="skill",
-                                data={"skill": name, "level": "unspecified", "evidence": "", "bank": key}))
+            claims.append(skill_claim(key, name, level_near(cv_text, span), bank=key))
         return claims
 
 
@@ -120,11 +154,11 @@ class SkillGraph(KnowledgeSource):
 
 # ---------------------------------------------------------------- questions
 def make_probe(probe_id, claim_id, difficulty, question, answer, key_points):
-    difficulty = difficulty if difficulty in PASS_RATES else "medium"
-    p_true, p_false = PASS_RATES[difficulty]
+    difficulty = difficulty if difficulty in DIFFICULTY_LEVEL else "medium"
+    rates = irt_pass_rates(len(LEVELS), DIFFICULTY_LEVEL[difficulty])
     return Probe(id=probe_id, claim_id=claim_id, question=question, answer=answer,
-                 rubric="; ".join(key_points), difficulty=difficulty,
-                 p_true=p_true, p_false=p_false, data={"key_points": list(key_points)})
+                 rubric="; ".join(key_points), difficulty=difficulty, pass_rates=rates,
+                 data={"key_points": list(key_points)})
 
 
 class InterviewQuestions(ProbeGenerator):
@@ -235,8 +269,14 @@ class CVPack(DomainPack):
         return AnswerGrader(self.llm)
 
     def sample_case(self, rng):
+        """A simulated candidate: real levels per skill; 60% describe themselves honestly,
+        the rest claim one or two levels more than they have."""
         keys = rng.sample(sorted(skill_bank()), 3)
-        names = [skill_bank()[k]["name"] for k in keys]
-        cv = "Software engineer with experience in " + ", ".join(names) + "."
-        truth = {key: rng.random() < 0.7 for key in keys}
-        return {"cv": cv}, truth
+        honest = rng.random() < 0.6
+        parts, truth = [], {}
+        for key in keys:
+            real = rng.randint(1, len(LEVELS) - 1)
+            claimed = real if honest else min(real + rng.randint(1, 2), len(LEVELS) - 1)
+            truth[key] = real
+            parts.append(f"{LEVELS[claimed]} {skill_bank()[key]['name']}")
+        return {"cv": "Software engineer. Skills: " + ", ".join(parts) + "."}, truth

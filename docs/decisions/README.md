@@ -9,3 +9,4 @@ Add a new numbered file when you make a choice someone might later question.
 | [0002](0002-bayesian-belief-and-swappable-policies.md) | Bayesian belief per claim; policies (including RL) only choose questions |
 | [0003](0003-provider-agnostic-llm.md) | Provider-agnostic LLM layer, Claude by default, offline fallback everywhere |
 | [0004](0004-fastapi-and-plain-js-ui.md) | FastAPI for the API, plain HTML/JS for the UI |
+| [0005](0005-yes-no-and-leveled-claims.md) | One model for yes/no and leveled claims |

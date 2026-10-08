@@ -67,7 +67,11 @@ class DomainPack:
 
     # ----- simulation (training and evaluation) -----
     def sample_case(self, rng):
-        """Return (inputs, truth) for one simulated person; truth maps claim id -> bool."""
+        """Return (inputs, truth) for one simulated person.
+
+        ``truth`` maps claim id -> the person's real level (an index into the claim's
+        levels), or for yes/no claims simply True / False.
+        """
         raise NotImplementedError
 
     def respondent(self, truth, rng=None):
