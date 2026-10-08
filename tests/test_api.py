@@ -29,6 +29,14 @@ def test_identity_session_over_http_hides_scores(client):
     assert again.status_code == 409
 
 
+def test_cv_verdict_reports_levels(client):
+    view = client.post("/api/sessions", json={"pack": "cv", "inputs": {"cv": "senior SQL"}}).json()
+    while not view["finished"]:
+        view = client.post(f"/api/sessions/{view['id']}/answer", json={"answer": "no idea"}).json()
+    claim = view["verdict"]["claims"][0]
+    assert claim["claimed_level"] == "senior" and claim["level"] in ("none", "beginner", "junior")
+
+
 def test_cv_session_over_http_shows_feedback(client):
     view = client.post("/api/sessions", json={"pack": "cv", "inputs": {"cv": "Python developer"}}).json()
     assert view["question"]["free_text"]

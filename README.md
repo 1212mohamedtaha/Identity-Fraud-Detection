@@ -11,7 +11,7 @@ The core knows nothing about any domain. Each use case is a **domain pack**:
 | Pack | What it checks | Questions | Grading |
 | --- | --- | --- | --- |
 | `identity` | Where you work, studied, live, were born | Multiple choice about nearby places | Exact match |
-| `cv` | The skills your CV claims | Free-text interview questions | LLM rubric grading (keywords offline) |
+| `cv` | The skills and levels your CV claims ("senior Python") | Free-text interview questions | LLM rubric grading (keywords offline) |
 
 Both run **with no API key** (offline mode). With an LLM configured, the CV pack reads
 the CV, writes questions about *your* projects and grades answers properly.
@@ -79,7 +79,18 @@ verity evaluate identity          # now also lists "learned"
 ```
 
 Use it in the web app ("Question strategy") or with `verity play identity --policy learned`.
-Step-by-step guide: [docs/guides/training.md](docs/guides/training.md).
+
+For the CV pack, train and test on a **synthetic dataset** of simulated candidates
+(honest, exaggerating, impostors), with a mock LLM standing in for the real one:
+
+```bash
+verity data generate cv --size 3000                       # -> datasets/cv/ (train/val/test)
+verity train cv --data datasets/cv --mock-llm
+verity evaluate cv --data datasets/cv --mock-llm          # scored on the held-out test split
+```
+
+Step-by-step guide: [docs/guides/training.md](docs/guides/training.md); what the data
+contains: [docs/specs/dataset.md](docs/specs/dataset.md).
 
 ## 6. Test
 
@@ -106,7 +117,9 @@ inputs ─► ClaimExtractor ─► claims ─► KnowledgeSource ─► graph �
 ```
 
 Start with [docs/architecture.md](docs/architecture.md), then the specs in
-[docs/specs/](docs/specs/). To build your own use case, follow
+[docs/specs/](docs/specs/). The mathematics (item response theory, Bayesian belief with a
+person factor, information gain, actor-critic RL, fitting and evaluation) is in
+[docs/modeling.md](docs/modeling.md). To build your own use case, follow
 [docs/guides/adding-a-pack.md](docs/guides/adding-a-pack.md).
 
 ## Project layout
@@ -115,7 +128,7 @@ Start with [docs/architecture.md](docs/architecture.md), then the specs in
 verity/
   core/        building blocks, engine, belief model, policies, simulation
   llm/         provider-agnostic LLM layer (Claude, OpenAI-compatible, fake for tests)
-  rl/          policy network, features, REINFORCE training
+  rl/          policy network, features, imitation + actor-critic training
   packs/
     identity/  identity pack + the original GNN / hierarchical RL model (legacy/) and its data
     cv/        CV skills pack: the reference example of extending the core

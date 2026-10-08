@@ -67,11 +67,36 @@ class DomainPack:
 
     # ----- simulation (training and evaluation) -----
     def sample_case(self, rng):
-        """Return (inputs, truth) for one simulated person; truth maps claim id -> bool."""
+        """Return (inputs, truth) for one simulated person.
+
+        ``truth`` maps claim id -> the person's real level (an index into the claim's
+        levels), or for yes/no claims simply True / False.
+        """
         raise NotImplementedError
 
-    def respondent(self, truth, rng=None):
+    def make_case(self, rng, index):
+        """One simulated person as a dataset row. Override to add traits (see the CV pack)."""
+        inputs, truth = self.sample_case(rng)
+        return {"id": f"{self.name}-{index:05d}", "inputs": inputs, "truth": truth}
+
+    def write_dataset_extras(self, cases, out, rng):
+        """Hook to write extra dataset files next to cases.jsonl (default: none)."""
+
+    def respondent(self, truth, rng=None, case=None):
+        """The simulated person answering. ``truth`` maps claim id -> real level."""
         return StatisticalRespondent(truth, rng or random.Random())
+
+    def fit_from_dataset(self, data_dir, out=None):
+        """Fit the pack's question parameters from a dataset (`verity data fit`)."""
+        raise NotImplementedError(f"Pack {self.name!r} has nothing to fit.")
+
+    def grader_report(self, data_dir, split="test"):
+        """Measure the pack's graders on a dataset (`verity data grader-eval`)."""
+        raise NotImplementedError(f"Pack {self.name!r} has no grader report.")
+
+    def mock_llm(self, seed=0):
+        """A fake LLM that plays this pack's prompts, for simulations; None if the pack has none."""
+        return None
 
     def describe(self):
         return {

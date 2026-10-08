@@ -22,27 +22,56 @@ Each block has an **LLM version** (used when an LLM is configured) and an **offl
 | Probes (`InterviewQuestions`) | `prompts/generate_questions.v1.md`: 3 questions per claim (easy, medium, hard), with model answer and key points; asks about projects in the evidence | The question bank in `skills.json` |
 | Assessor (`AnswerGrader`) | `prompts/grade_answer.v1.md`: score 0–1 + feedback | Key-point matching: `score = min(1, hits / ceil(0.6 × key points))`; feedback lists covered and missing points |
 
-Claim ids are slugs of the skill name (`machine-learning`). A claim is "Knows <skill>" plus
-"(<level>)" when the LLM gives a level.
+## Levels
+Skill claims are leveled: `LEVELS = ("none", "beginner", "junior", "mid", "senior")`.
+A claim "Knows SQL at mid level" holds for real level mid or senior.
 
-Pass rates by difficulty:
+- The claimed level comes from the LLM (`level` field) or, offline, from what is written right
+  next to **any** mention of the skill (the strongest one wins):
+  - a level word before or after: "senior Python", "expert in Git", "Docker (mid)", "Python - beginner".
+    Words: beginner/basic/entry-level, junior, mid/mid-level/intermediate, senior/expert/advanced/lead;
+  - years of experience: "5+ years of Python", "SQL: 5 years", "Docker (3 years)":
+    1–2 years → junior, 3–4 → mid, 5+ → senior.
+- No level given anywhere → `junior`.
 
-| Difficulty | `p_true` | `p_false` |
-| --- | --- | --- |
-| easy | 0.90 | 0.45 |
-| medium | 0.80 | 0.30 |
-| hard | 0.65 | 0.15 |
+Claim ids are slugs of the skill name (`machine-learning`); text "Knows <skill> at <level> level".
 
-`max_questions = 12`, `show_feedback = True`, `accept = 0.85`, `reject = 0.15`.
+Expected scores per level come from `irt_pass_rates(5, difficulty, discrimination)`. When
+`data/fitted_questions.json` has the question (see "Fitted parameters"), the fitted values are
+used; otherwise the difficulty label gives:
+
+| Difficulty | 50/50 at level | none | beginner | junior | mid | senior |
+| --- | --- | --- | --- | --- | --- | --- |
+| easy | 1.5 | 0.12 | 0.32 | 0.68 | 0.88 | 0.94 |
+| medium | 2.5 | 0.06 | 0.12 | 0.32 | 0.68 | 0.88 |
+| hard | 3.5 | 0.05 | 0.06 | 0.12 | 0.32 | 0.68 |
+
+`max_questions = 15`, `show_feedback = True`, `accept = 0.9`, `reject = 0.1`, `person_spread = 0.1`
+(tuned on the validation split; the data measures 0.48, see [../modeling.md](../modeling.md)).
+
+## Fitted parameters (`data/fitted_questions.json`)
+Written by `verity data fit cv --data datasets/cv` from the dataset's train split (see
+`tuning.py`):
+`{"questions": {text: {difficulty, discrimination, answers}}, "person_spread", "fatigue", "score_noise": {"llm", "keyword"}, "gap_prior": {gap: share}}`.
+The belief model uses the fitted `fatigue`, `gap_prior` (base rate of real − claimed level) and
+`score_noise["llm"]` when an LLM grades / `score_noise["keyword"]` offline.
+The committed file was fitted on a 3000-person synthetic dataset (seed 0).
+
+`verity data grader-eval cv --data datasets/cv` compares keyword and mock-LLM grading with the
+true answer quality (current synthetic data, test split: keyword error 0.14 / 88% pass agreement,
+mock LLM 0.06 / 96%).
 
 ## Question bank (`data/skills.json`)
 `{key: {name, aliases, topics, questions: [{difficulty, question, answer, keywords}]}}`.
 Every model answer must contain all of its keywords (a test checks this).
-Skills: Python, SQL, JavaScript, React, Docker, Git, machine learning, REST APIs.
+Skills: Python, SQL, JavaScript, React, Docker, Git, machine learning, REST APIs; 7 questions
+each (2 easy, 3 medium, 2 hard), 56 in total.
 
 ## Simulation
-`sample_case`: 3 random bank skills; the CV is "Software engineer with experience in …";
-each claim is true with probability 0.7.
+Synthetic candidates (personas with honesty type, real vs claimed levels, sharpness, fatigue,
+look-up habit), their answers, and a mock LLM: see [dataset.md](dataset.md).
+`make_case` creates a persona; `respondent` plays it (`PersonaRespondent`); `mock_llm` returns
+`MockInterviewLLM`; `write_dataset_extras` writes `answers.jsonl` and `questions.json`.
 
 ## Safety
 CV, job and answers are passed to prompts inside tags (`<cv>`, `<job>`, `<answer>`), and
@@ -50,5 +79,5 @@ every prompt tells the model to treat them as data. Grading prompts judge techni
 content only, not grammar or style.
 
 ## Ideas for later
-Question bank per job family; voice answers; a final coaching report; IRT (item response
-theory) instead of fixed pass rates once real answer data exists.
+Question bank per job family; voice answers; a final coaching report; fit each question's
+IRT difficulty from answer data instead of the difficulty label.

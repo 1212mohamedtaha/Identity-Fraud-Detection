@@ -6,15 +6,37 @@ SUPPORTED = "supported"
 REFUTED = "refuted"
 UNCERTAIN = "uncertain"
 
+YES_NO = ("false", "true")
+
 
 @dataclass
 class Claim:
-    """Something a person asserts, e.g. "Works at ITI Mansoura" or "Knows SQL (senior)"."""
+    """Something a person asserts, e.g. "Works at ITI Mansoura" or "Knows SQL at senior level".
+
+    Every claim lives on an ordered scale of ``levels``. A yes/no claim is the two-level
+    scale ("false", "true"); a skill can use ("none", "beginner", ..., "senior").
+    The claim holds when the person's real level is at or above ``claimed_level``
+    (an index into ``levels``; defaults to the top level).
+    """
 
     id: str
     text: str
     kind: str = ""                          # free label, e.g. "company" or "skill"
     data: dict = field(default_factory=dict)  # anything the pack needs later
+    levels: tuple = YES_NO
+    claimed_level: Optional[int] = None
+
+    def __post_init__(self):
+        if self.claimed_level is None:
+            self.claimed_level = len(self.levels) - 1
+
+    @property
+    def is_yes_no(self):
+        return tuple(self.levels) == YES_NO
+
+    def holds_at(self, level):
+        """Is the claim true for someone whose real level is ``level``?"""
+        return level >= self.claimed_level
 
 
 @dataclass
@@ -27,8 +49,10 @@ class Choice:
 class Probe:
     """One question (or task) that tests one claim.
 
-    ``p_true`` / ``p_false`` say how likely someone passes this probe when the claim is
-    true / false. The belief model uses them to weigh each answer.
+    ``pass_rates[level]`` is the chance that someone at that level of the claim's scale
+    passes this probe; the belief model uses it to weigh each answer. For a yes/no claim
+    it is simply ``[p_false, p_true]``, so packs may set just ``p_true`` / ``p_false``
+    and the engine fills ``pass_rates`` in (see belief.default_pass_rates).
     """
 
     id: str
@@ -40,6 +64,7 @@ class Probe:
     difficulty: str = "medium"
     p_true: float = 0.8
     p_false: float = 0.25
+    pass_rates: list = field(default_factory=list)
     data: dict = field(default_factory=dict)
 
     @property
@@ -65,6 +90,7 @@ class ClaimResult:
     status: str              # SUPPORTED / REFUTED / UNCERTAIN
     questions: int
     explanation: str
+    level: Optional[int] = None   # most likely real level (index into claim.levels)
 
 
 @dataclass

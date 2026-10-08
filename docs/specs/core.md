@@ -6,16 +6,34 @@ Code: `verity/core/`. The core must stay domain-agnostic (no identity, CV or oth
 
 | Type | Fields | Notes |
 | --- | --- | --- |
-| `Claim` | `id`, `text`, `kind`, `data` | `id` is unique within a session. `data` is free space for the pack. |
+| `Claim` | `id`, `text`, `kind`, `data`, `levels`, `claimed_level` | `id` is unique within a session. `data` is free space for the pack. See "Yes/no and leveled claims" below. |
 | `Choice` | `id`, `text` | Option of a multiple-choice probe ("A", "B", ...). |
-| `Probe` | `id`, `claim_id`, `question`, `choices`, `answer`, `rubric`, `difficulty`, `p_true`, `p_false`, `data` | Empty `choices` means a free-text answer. `answer` is the correct choice id, or a reference answer for free text. |
+| `Probe` | `id`, `claim_id`, `question`, `choices`, `answer`, `rubric`, `difficulty`, `p_true`, `p_false`, `pass_rates`, `data` | Empty `choices` means a free-text answer. `answer` is the correct choice id, or a reference answer for free text. `pass_rates[level]` = chance of passing at each level of the claim. |
 | `Observation` | `probe_id`, `claim_id`, `answer`, `score`, `feedback` | `score` is in `[0, 1]`. |
 | `Turn` | `probe`, `observation` | One answered question. |
 | `SessionState` | `claims`, `probes`, `belief`, `max_questions`, `graph`, `inputs`, `history`, `notes`, `data` | What policies see. |
-| `ClaimResult` | `claim`, `probability`, `status`, `questions`, `explanation` | |
+| `ClaimResult` | `claim`, `probability`, `status`, `questions`, `explanation`, `level` | `level` = most likely real level (index). |
 | `Verdict` | `status`, `probability`, `claims`, `notes` | `probability` = lowest claim probability. |
 
 Statuses: `supported`, `refuted`, `uncertain`.
+
+### Yes/no and leveled claims
+
+Every claim lives on an ordered scale `levels` (lowest first) and asserts a minimum level
+`claimed_level` (an index; default: the top level). The claim **holds** when the person's
+real level is `>= claimed_level` (`claim.holds_at(level)`).
+
+| Kind | `levels` | `claimed_level` |
+| --- | --- | --- |
+| Yes/no (default) | `("false", "true")` | 1 ("true") |
+| Skill (CV pack) | `("none", "beginner", "junior", "mid", "senior")` | what the CV says |
+
+Probes describe their strength per level with `pass_rates`. A pack may instead set only
+`p_true` / `p_false`; the engine then fills `pass_rates` with `p_false` below the claimed level
+and `p_true` at or above it (`belief.default_pass_rates`). For yes/no claims that is
+`[p_false, p_true]`, identical to a classic two-hypothesis test.
+`belief.irt_pass_rates(n_levels, difficulty, discrimination=1.7, guess=0.05, slip=0.05)`
+builds level-based rates from item response theory: `guess + (1 - guess - slip) * sigmoid(discrimination * (level - difficulty))`.
 
 ## Interfaces (`interfaces.py`)
 
@@ -35,7 +53,8 @@ Statuses: `supported`, `refuted`, `uncertain`.
 `Session(pack, inputs, policy=None)`:
 1. claims = `pack.claim_extractor().extract(inputs)`; empty → `ValueError`.
 2. graph = `pack.knowledge_source().build(claims, inputs)`.
-3. probes = `pack.probe_generator().generate(claims, graph)`.
+3. probes = `pack.probe_generator().generate(claims, graph)`; probes without `pass_rates` get
+   `default_pass_rates(claim, probe)`.
 4. belief = `pack.belief_model()`; `belief.start(claims)`.
 5. policy = given policy or `pack.policy()`; `policy.reset(state)`; ask the first probe.
 
@@ -47,25 +66,48 @@ Statuses: `supported`, `refuted`, `uncertain`.
 The session finishes (and builds `session.verdict`) when the policy returns `None` or
 `max_questions` answers were given.
 
-Verdict per claim: the belief's status and probability, plus an explanation
-"`<passed> of <n> answers passed; <p>% likely true.`" or "Not tested.".
+Verdict per claim: the belief's status, probability and most likely level, plus an explanation
+"`<passed> of <n> answers passed; <p>% likely true.`" (leveled claims add
+"` Most likely level: <level> (claimed: <level>).`"), or "Not tested.".
 Overall: `refuted` if any claim is refuted; `supported` if all are supported; otherwise `uncertain`.
 
 ## Belief model (`belief.py`)
 
-Per claim, log-odds starting at `logit(prior)`. For an observation with score `s` on a probe
-with pass rates `p_true`, `p_false`:
+`BeliefModel(prior=0.5, accept=0.9, reject=0.1, score_noise=0.2, person_spread=0.0, fatigue=0.0, gap_prior=None)`.
+The full mathematics is in [../modeling.md](../modeling.md).
 
-```
-if_true  = s * p_true  + (1 - s) * (1 - p_true)
-if_false = s * p_false + (1 - s) * (1 - p_false)
-log_odds += log(if_true / if_false)
-```
+Per claim, a probability for every level. Start (`prior_for`):
+- with `gap_prior` (`{real - claimed: probability}`): each level gets the base rate of its gap
+  to the claimed level + 0.01, renormalised;
+- otherwise `prior` spread evenly over the levels where the claim holds, `1 - prior` over the
+  levels below (yes/no: `[1 - prior, prior]`; a claim at level 0 starts uniform).
 
-So `s = 1` is a pass, `s = 0` a fail, `s = 0.5` is neutral. Probabilities are clamped to
-`[0.01, 0.99]`. Status: `supported` if `p >= accept`, `refuted` if `p <= reject`, else `uncertain`.
+**Person factor.** A hidden offset δ (levels) shared by every claim of the session, on a grid of
+7 points from −2·`person_spread` to +2·`person_spread` with normal prior weights (one point at 0
+when `person_spread` is 0). Level weights are kept per grid point; each answer also re-weighs
+the grid points by how well they explain it.
 
-`expected_gain(probe)`: expected drop in entropy (bits) of the probe's claim from asking it.
+**Fatigue.** After `answered` questions, a person performs as if `fatigue × answered` levels lower.
+Expected scores at fractional positions use straight-line interpolation of `pass_rates` (`rate_at`).
+
+After an observation with score `s` on a probe with pass rates `r` (rates clamped to
+`[0.01, 0.99]`), for every person offset δ each level's weight is multiplied by the likelihood of
+`s` at position `level + δ − fatigue × answered`:
+
+- multiple-choice probe: `r[level] ** s * (1 - r[level]) ** (1 - s)` (= `r` for a pass, `1 - r` for a fail);
+- free-text probe: `exp(-(s - r[level])² / (2 · score_noise²))`: `r[level]` is the expected score
+  at that level, `score_noise` (default 0.2) the typical spread of real scores around it.
+
+Then weights are renormalised, given a floor of 0.001 and renormalised again so no level is
+ever ruled out by one answer. See decision 0006.
+
+- `level_weights(claim_id)`: level probabilities averaged over the person offsets.
+- `probability(claim_id)`: total weight on levels where the claim holds.
+- `person_offset()`: expected person offset.
+- `level(claim_id)`: most likely level.
+- `status`: `supported` if `p >= accept`, `refuted` if `p <= reject`, else `uncertain`.
+- `expected_gain(probe)`: expected drop in entropy (bits) of "the claim holds" from asking the probe,
+  averaged over the possible answers (pass/fail, or free-text scores 0, 0.1, …, 1).
 
 ## Policies (`policies.py`)
 
@@ -81,21 +123,39 @@ So `s = 1` is a pass, `s = 0` a fail, `s = 0.5` is neutral. Probabilities are cl
 `DomainPack` attributes: `name`, `title`, `description`, `input_fields`, `max_questions`,
 `show_feedback`, `prior`, `accept`, `reject`.
 Required overrides: `claim_extractor()`, `knowledge_source()`, `probe_generator()`, `sample_case(rng)`.
-Optional overrides: `assessor()`, `belief_model()`, `policy(name, rng)`, `policy_names()`, `respondent(truth, rng)`.
+Optional overrides: `assessor()`, `belief_model()`, `policy(name, rng)`, `policy_names()`,
+`respondent(truth, rng, case)`, `make_case(rng, index)`, `write_dataset_extras(cases, out, rng)`, `mock_llm(seed)`.
 The constructor takes `llm` (an `LLM` or `None`).
 
 `input_fields` items: `{"name", "label", "type": "text"|"textarea", "required", "placeholder"}`.
 The UI renders them as the start form; their values arrive as `inputs[name]` (strings).
 
+## Fitting (`fitting.py`)
+
+All fits maximise `Σ score·log r + (1 − score)·log(1 − r)` by grid search.
+- `fit_item(observations, n_levels)`: observations `(position, score)`; returns
+  `(difficulty, discrimination)` (difficulty −1..n_levels in 0.1 steps; discrimination 0.8–3.2).
+- `fit_person_offset(answers, fatigue)`: one person's offset (−1.5..1.5 in 0.1 steps).
+- `fit_fatigue(people)`: drift per question (0..0.08), each person with their best offset.
+- `person_spread(people, fatigue)`: √cov of offsets estimated from two halves of each person's
+  answers (the covariance removes estimation noise).
+
 ## Simulation (`simulation.py`)
 
-- `StatisticalRespondent(truth, rng, spread=0.1)`: passes a probe with `p_true` (claim true) or
-  `p_false` (claim false), shifted by a per-person offset in `[-spread, spread]`. Passing means
+- `sample_case(rng)` returns `(inputs, truth)`; `truth[claim_id]` is the person's real level, or a
+  bool for yes/no use cases. `true_levels(truth, claims)` converts: `True` → the claimed level,
+  `False` → one level below it.
+- `StatisticalRespondent(truth_levels, rng, spread=0.1)`: passes a probe with
+  `probe.pass_rates[real level]`, shifted by a per-person offset in `[-spread, spread]`. Passing means
   answering `probe.answer`; failing means a wrong choice, or "I'm not sure." for free text.
-- `run_episode(pack, policy, rng) -> (session, truth)`.
-- `episode_reward(session, truth)`: `+1` correct, `-0.25` uncertain, `-1` wrong, minus `0.02` per question.
-- `evaluate(pack, policy_name, episodes, seed)` → accuracy, uncertain, wrong, avg_questions, reward.
-  The expected verdict is `supported` when every claim in `truth` is true, otherwise `refuted`.
+- `run_episode(pack, policy, rng, case=None) -> (session, truth levels)`: plays a dataset case,
+  or a fresh `pack.make_case(rng, 0)`; the respondent is `pack.respondent(truth, rng, case)`.
+- `episode_reward(session, truth)`: `+1` correct, `-0.25` uncertain, `-3` wrong, minus `0.02` per question
+  (`VERDICT_REWARD`, `QUESTION_COST`).
+- `evaluate(pack, policy_name, episodes, seed, cases=None)` → accuracy, uncertain, wrong,
+  avg_questions, reward. With `cases`, plays each case once.
+- Datasets: see [dataset.md](dataset.md).
+  The expected verdict is `supported` when every claim holds at the person's real level, otherwise `refuted`.
 
 ## Knowledge graph (`graph.py`)
 

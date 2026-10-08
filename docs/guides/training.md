@@ -23,10 +23,11 @@ Three policies exist out of the box:
    e.g. "really works at X, but lied about the university".
 2. **Play a full session.** A simulated respondent answers each question: someone with a
    true claim passes a question with probability `p_true`, someone lying with `p_false`.
-3. **Score the session.** +1 for a correct verdict, −1 for a wrong one, −0.25 if it ended
+3. **Score the session.** +1 for a correct verdict, −3 for a wrong one, −0.25 if it ended
    "uncertain", and −0.02 for every question asked (shorter is better).
-4. **Learn.** Choices made in sessions that scored above average become more likely
-   (REINFORCE). Repeat a few thousand times.
+4. **Learn.** First the network copies the greedy policy (imitation), then it improves by
+   actor-critic: choices that led to better-than-predicted results become more likely.
+   The best version on validation people is kept.
 
 ## Step by step
 
@@ -53,12 +54,13 @@ command from). Delete that file to go back to the built-in policies only.
 
 ## Reading the results
 
+Identity pack (300 simulated people, before training):
+
 ```
 policy      accuracy  uncertain   wrong  questions  reward
-greedy         61.7%      28.3%   10.0%        9.2  +0.262
-random         66.7%      24.0%    9.3%       14.2  +0.230
-learned        65.7%      28.0%    6.3%       10.6  +0.311
-legacy         48.7%      48.3%    3.0%       10.2  +0.131
+greedy         61.7%      28.3%   10.0%        9.2  +0.062
+random         66.7%      24.0%    9.3%       14.2  +0.044
+legacy         48.7%      48.3%    3.0%       10.2  +0.071
 ```
 
 - **accuracy**: verdict matched the truth.
@@ -68,9 +70,14 @@ legacy         48.7%      48.3%    3.0%       10.2  +0.131
 - **reward**: the single number training maximises (combines all of the above).
   **Compare policies by reward.**
 
-Here the learned policy beats greedy on reward: it is wrong less often for about one
-more question. `legacy` is cautious; it stops on its own decision, which often leaves
-claims "uncertain" for the belief model.
+A wrong verdict costs 3 in the reward, so the cautious original model (`legacy`, only 3% wrong)
+edges out greedy here even though it is right less often. With 300 people the reward is only
+accurate to about ±0.07, so these three are effectively tied; use more people (`--episodes`,
+or a large dataset) before drawing conclusions.
+
+So far a trained policy has **not** beaten greedy on a large held-out test set (CV pack:
+greedy +0.261, learned +0.20 to +0.23 over three seeds). Why, and when RL should pay off:
+[../modeling.md](../modeling.md) §13. Always check your trained policy against greedy before using it.
 
 The same for the CV pack:
 
@@ -101,6 +108,33 @@ pack = get_pack("cv")
 train(pack, episodes=3000, out=pack.learned_policy_path())
 print(evaluate(pack, "learned", episodes=500))
 ```
+
+## Training on a synthetic dataset (CV pack)
+
+```bash
+# 1. data: a small set with answers (for fitting) and a large set (for training and testing)
+verity data generate cv --size 3000                                   # -> datasets/cv/
+verity data generate cv --size 20000 --seed 7 --cases-only --out datasets/cv-large
+
+# 2. measure graders and fit the model (question difficulty, fatigue, person spread, priors)
+verity data grader-eval cv --data datasets/cv
+verity data fit cv --data datasets/cv
+
+# 3. baseline on 3,000 held-out test people
+verity evaluate cv --data datasets/cv-large --policies greedy random
+
+# 4. train (imitation warm start + actor-critic, ~10 min per seed on a laptop CPU)
+verity train cv --data datasets/cv-large --episodes 6000 --eval-every 500
+
+# 5. compare on the test split
+verity evaluate cv --data datasets/cv-large --policies greedy learned
+```
+
+Add `--mock-llm` to steps 3–5 to run the LLM code path with the mock LLM (grading closer to
+what a real LLM would do). Train with several `--seed` values and keep the result only if it beats
+greedy on the **test** split. The maths behind every step: [../modeling.md](../modeling.md).
+
+What the dataset contains and its limits: [../specs/dataset.md](../specs/dataset.md).
 
 ## Making training more realistic
 
