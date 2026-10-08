@@ -34,9 +34,10 @@ def read_jsonl(path):
         return [json.loads(line) for line in f if line.strip()]
 
 
-def generate_dataset(pack, size, seed, out):
+def generate_dataset(pack, size, seed, out, extras=True):
     """Create ``size`` cases with the pack's ``make_case`` and write them to ``out/cases.jsonl``.
-    The pack may write extra files (``write_dataset_extras``). Returns the cases."""
+    The pack may write extra files (``write_dataset_extras``; skipped with ``extras=False``,
+    e.g. for large evaluation datasets). Returns the cases."""
     rng = random.Random(seed)
     cases = []
     for index in range(size):
@@ -45,7 +46,8 @@ def generate_dataset(pack, size, seed, out):
         cases.append(case)
     out = Path(out)
     write_jsonl(out / "cases.jsonl", cases)
-    pack.write_dataset_extras(cases, out, random.Random(seed + 1))
+    if extras:
+        pack.write_dataset_extras(cases, out, random.Random(seed + 1))
     (out / "info.json").write_text(json.dumps(
         {"pack": pack.name, "size": size, "seed": seed, "splits": dict(SPLITS)}, indent=2))
     return cases

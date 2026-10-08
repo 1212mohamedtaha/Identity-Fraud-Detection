@@ -112,8 +112,12 @@ def cmd_train(args):
 
     pack = simulation_pack(args)
     out = args.out or pack.learned_policy_path()
-    train(pack, episodes=args.episodes, lr=args.lr, question_cost=args.question_cost, seed=args.seed, out=out,
-          cases=dataset_cases(args, "train"))
+    val_cases = dataset_cases(args, "val")
+    if val_cases:
+        val_cases = val_cases[:args.val_size]
+    train(pack, episodes=args.episodes, lr=args.lr, batch=args.batch, imitation=args.imitation,
+          question_cost=args.question_cost, seed=args.seed, out=out, eval_every=args.eval_every,
+          cases=dataset_cases(args, "train"), val_cases=val_cases)
     print(f"Saved the trained policy to {out}. Compare it with: verity evaluate {pack.name}")
 
 
@@ -123,7 +127,7 @@ def cmd_data_generate(args):
 
     pack = get_pack(args.pack)
     out = Path(args.out or Path("datasets") / pack.name)
-    cases = generate_dataset(pack, args.size, args.seed, out)
+    cases = generate_dataset(pack, args.size, args.seed, out, extras=not args.cases_only)
     print(f"Wrote {len(cases)} cases to {out}/ (train 70%, val 15%, test 15%).")
 
 
@@ -196,8 +200,12 @@ def main(argv=None):
 
     p = sub.add_parser("train", help="train an RL policy on simulated people")
     p.add_argument("pack")
-    p.add_argument("--episodes", type=int, default=2000)
-    p.add_argument("--lr", type=float, default=0.01)
+    p.add_argument("--episodes", type=int, default=3000)
+    p.add_argument("--lr", type=float, default=0.003)
+    p.add_argument("--batch", type=int, default=16, help="episodes per update")
+    p.add_argument("--imitation", type=int, default=300, help="greedy sessions copied before RL")
+    p.add_argument("--eval-every", type=int, default=250, help="episodes between validation checkpoints")
+    p.add_argument("--val-size", type=int, default=1500, help="validation cases used per checkpoint (with --data)")
     p.add_argument("--question-cost", type=float, default=0.02, help="reward penalty per question asked")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", help="default: models/<pack>/policy.pt")
@@ -210,6 +218,8 @@ def main(argv=None):
     p.add_argument("--size", type=int, default=3000)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", help="default: datasets/<pack>")
+    p.add_argument("--cases-only", action="store_true",
+                   help="write only cases.jsonl (for large training / evaluation datasets)")
     p.set_defaults(func=cmd_data_generate)
 
     p = data.add_parser("fit", help="fit question parameters from a dataset")

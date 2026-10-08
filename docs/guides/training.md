@@ -25,8 +25,9 @@ Three policies exist out of the box:
    true claim passes a question with probability `p_true`, someone lying with `p_false`.
 3. **Score the session.** +1 for a correct verdict, −3 for a wrong one, −0.25 if it ended
    "uncertain", and −0.02 for every question asked (shorter is better).
-4. **Learn.** Choices made in sessions that scored above average become more likely
-   (REINFORCE). Repeat a few thousand times.
+4. **Learn.** First the network copies the greedy policy (imitation), then it improves by
+   actor-critic: choices that led to better-than-predicted results become more likely.
+   The best version on validation people is kept.
 
 ## Step by step
 
@@ -105,13 +106,27 @@ print(evaluate(pack, "learned", episodes=500))
 ## Training on a synthetic dataset (CV pack)
 
 ```bash
-verity data generate cv --size 3000              # simulated candidates -> datasets/cv/
-verity data grader-eval cv --data datasets/cv    # how good is each grader?
-verity data fit cv --data datasets/cv            # fit question difficulty + score noise
-verity evaluate cv --data datasets/cv            # policies on the held-out test split
-verity train cv --data datasets/cv --mock-llm    # train on the train split, LLM path mocked
-verity evaluate cv --data datasets/cv --mock-llm
+# 1. data: a small set with answers (for fitting) and a large set (for training and testing)
+verity data generate cv --size 3000                                   # -> datasets/cv/
+verity data generate cv --size 20000 --seed 7 --cases-only --out datasets/cv-large
+
+# 2. measure graders and fit the model (question difficulty, fatigue, person spread, priors)
+verity data grader-eval cv --data datasets/cv
+verity data fit cv --data datasets/cv
+
+# 3. baseline on 3,000 held-out test people
+verity evaluate cv --data datasets/cv-large --policies greedy random
+
+# 4. train (imitation warm start + actor-critic, ~10 min per seed on a laptop CPU)
+verity train cv --data datasets/cv-large --episodes 6000 --eval-every 500
+
+# 5. compare on the test split
+verity evaluate cv --data datasets/cv-large --policies greedy learned
 ```
+
+Add `--mock-llm` to steps 3–5 to run the LLM code path with the mock LLM (grading closer to
+what a real LLM would do). Train with several `--seed` values and keep the result only if it beats
+greedy on the **test** split. The maths behind every step: [../modeling.md](../modeling.md).
 
 What the dataset contains and its limits: [../specs/dataset.md](../specs/dataset.md).
 

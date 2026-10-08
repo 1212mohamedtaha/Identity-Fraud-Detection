@@ -117,7 +117,9 @@ inputs ─► ClaimExtractor ─► claims ─► KnowledgeSource ─► graph �
 ```
 
 Start with [docs/architecture.md](docs/architecture.md), then the specs in
-[docs/specs/](docs/specs/). To build your own use case, follow
+[docs/specs/](docs/specs/). The mathematics (item response theory, Bayesian belief with a
+person factor, information gain, actor-critic RL, fitting and evaluation) is in
+[docs/modeling.md](docs/modeling.md). To build your own use case, follow
 [docs/guides/adding-a-pack.md](docs/guides/adding-a-pack.md).
 
 ## Project layout
@@ -126,7 +128,7 @@ Start with [docs/architecture.md](docs/architecture.md), then the specs in
 verity/
   core/        building blocks, engine, belief model, policies, simulation
   llm/         provider-agnostic LLM layer (Claude, OpenAI-compatible, fake for tests)
-  rl/          policy network, features, REINFORCE training
+  rl/          policy network, features, imitation + actor-critic training
   packs/
     identity/  identity pack + the original GNN / hierarchical RL model (legacy/) and its data
     cv/        CV skills pack: the reference example of extending the core

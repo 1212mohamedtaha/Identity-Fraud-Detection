@@ -87,6 +87,7 @@ def run_episode(pack, policy, rng, case=None):
 def evaluate(pack, policy_name, episodes=200, seed=0, cases=None):
     """Run simulated sessions and summarise how well the policy did.
 
+    ``policy_name`` is a policy name of the pack, or a function ``rng -> policy``.
     With ``cases`` (e.g. a dataset's test split) every case is played once; otherwise
     ``episodes`` fresh people are made. ``reward`` is the average of the score RL
     training maximises (see episode_reward).
@@ -97,7 +98,7 @@ def evaluate(pack, policy_name, episodes=200, seed=0, cases=None):
     plan = cases if cases is not None else [None] * episodes
     episodes = len(plan)
     for case in plan:
-        policy = pack.policy(policy_name, rng=rng)
+        policy = policy_name(rng) if callable(policy_name) else pack.policy(policy_name, rng=rng)
         session, truth = run_episode(pack, policy, rng, case)
         status = session.verdict.status
         questions += len(session.history)
@@ -109,7 +110,7 @@ def evaluate(pack, policy_name, episodes=200, seed=0, cases=None):
         else:
             wrong += 1
     return {
-        "policy": policy_name,
+        "policy": policy_name if isinstance(policy_name, str) else "custom",
         "episodes": episodes,
         "accuracy": correct / episodes,
         "uncertain": uncertain / episodes,
