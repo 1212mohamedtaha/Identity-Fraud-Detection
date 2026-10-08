@@ -54,12 +54,13 @@ command from). Delete that file to go back to the built-in policies only.
 
 ## Reading the results
 
+Identity pack (300 simulated people, before training):
+
 ```
 policy      accuracy  uncertain   wrong  questions  reward
-greedy         61.7%      28.3%   10.0%        9.2  +0.262
-random         66.7%      24.0%    9.3%       14.2  +0.230
-learned        65.7%      28.0%    6.3%       10.6  +0.311
-legacy         48.7%      48.3%    3.0%       10.2  +0.131
+greedy         61.7%      28.3%   10.0%        9.2  +0.062
+random         66.7%      24.0%    9.3%       14.2  +0.044
+legacy         48.7%      48.3%    3.0%       10.2  +0.071
 ```
 
 - **accuracy**: verdict matched the truth.
@@ -69,9 +70,14 @@ legacy         48.7%      48.3%    3.0%       10.2  +0.131
 - **reward**: the single number training maximises (combines all of the above).
   **Compare policies by reward.**
 
-Here the learned policy beats greedy on reward: it is wrong less often for about one
-more question. `legacy` is cautious; it stops on its own decision, which often leaves
-claims "uncertain" for the belief model.
+A wrong verdict costs 3 in the reward, so the cautious original model (`legacy`, only 3% wrong)
+edges out greedy here even though it is right less often. With 300 people the reward is only
+accurate to about ±0.07, so these three are effectively tied; use more people (`--episodes`,
+or a large dataset) before drawing conclusions.
+
+So far a trained policy has **not** beaten greedy on a large held-out test set (CV pack:
+greedy +0.261, learned +0.20 to +0.23 over three seeds). Why, and when RL should pay off:
+[../modeling.md](../modeling.md) §13. Always check your trained policy against greedy before using it.
 
 The same for the CV pack:
 
