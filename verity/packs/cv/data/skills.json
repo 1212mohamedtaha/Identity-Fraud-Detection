@@ -1,0 +1,162 @@
+{
+  "python": {
+    "name": "Python",
+    "aliases": ["python", "django", "flask", "fastapi", "pandas"],
+    "topics": ["data structures", "generators", "virtual environments", "testing"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between a list and a tuple in Python?",
+       "answer": "A list is mutable, so you can change it after creation. A tuple is immutable, so it cannot change; that also makes tuples hashable, so they can be dictionary keys.",
+       "keywords": ["mutable", "immutable", "hashable"]},
+      {"difficulty": "medium",
+       "question": "What does the `yield` keyword do, and why would you use a generator?",
+       "answer": "yield turns a function into a generator that produces values lazily, one at a time, keeping its state between calls. It saves memory because the whole sequence is never stored.",
+       "keywords": ["lazily", "one at a time", "memory", "state"]},
+      {"difficulty": "medium",
+       "question": "How do you isolate a project's dependencies in Python?",
+       "answer": "Use a virtual environment (venv) per project and pin the dependencies in a requirements file or pyproject.",
+       "keywords": ["virtual environment", "venv", "requirements", "pin"]},
+      {"difficulty": "hard",
+       "question": "What is the GIL and how does it affect multi-threaded Python code?",
+       "answer": "The global interpreter lock lets only one thread execute Python bytecode at a time, so threads do not speed up CPU-bound work; use multiprocessing for CPU-bound work, while threads still help with I/O-bound work.",
+       "keywords": ["global interpreter lock", "one thread", "cpu-bound", "multiprocessing", "i/o"]}
+    ]
+  },
+  "sql": {
+    "name": "SQL",
+    "aliases": ["sql", "postgresql", "postgres", "mysql", "sqlite"],
+    "topics": ["joins", "indexes", "transactions", "aggregation"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between an INNER JOIN and a LEFT JOIN?",
+       "answer": "An inner join returns only rows that match in both tables. A left join returns all rows from the left table and fills the right side with NULL when there is no match.",
+       "keywords": ["match", "all rows", "left table", "null"]},
+      {"difficulty": "medium",
+       "question": "What is the difference between WHERE and HAVING?",
+       "answer": "WHERE filters rows before grouping; HAVING filters groups after GROUP BY, so it can use aggregate functions.",
+       "keywords": ["before", "after", "group by", "aggregate"]},
+      {"difficulty": "medium",
+       "question": "Why can an index make a query faster, and what does it cost?",
+       "answer": "An index (usually a B-tree) lets the database find rows without a full table scan. It costs extra storage and slower writes, because inserts and updates must update the index.",
+       "keywords": ["b-tree", "full table scan", "storage", "writes"]},
+      {"difficulty": "hard",
+       "question": "What does transaction isolation mean? Name a problem it prevents.",
+       "answer": "Isolation controls how concurrent transactions see each other's changes. Isolation levels prevent problems such as dirty reads, non-repeatable reads and phantom reads.",
+       "keywords": ["concurrent", "isolation level", "dirty read", "phantom"]}
+    ]
+  },
+  "javascript": {
+    "name": "JavaScript",
+    "aliases": ["javascript", "typescript", "node.js", "nodejs", "node"],
+    "topics": ["closures", "event loop", "promises"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between `==` and `===` in JavaScript?",
+       "answer": "== compares after type coercion; === is strict equality and compares value and type without coercion.",
+       "keywords": ["coercion", "strict", "type"]},
+      {"difficulty": "medium",
+       "question": "What is a closure in JavaScript? Give an example of where it is useful.",
+       "answer": "A closure is a function that keeps access to variables from the scope where it was created, even after that scope has returned. It is useful for private state, callbacks and factories.",
+       "keywords": ["scope", "variables", "after", "private"]},
+      {"difficulty": "hard",
+       "question": "Explain the event loop: in what order do a resolved promise callback and a setTimeout(…, 0) callback run?",
+       "answer": "JavaScript is single-threaded. The event loop runs the call stack, then all microtasks such as promise callbacks, then the next macrotask such as a setTimeout callback, so the promise callback runs first.",
+       "keywords": ["single-threaded", "microtask", "macrotask", "promise", "first"]}
+    ]
+  },
+  "react": {
+    "name": "React",
+    "aliases": ["react", "react.js", "reactjs", "next.js", "nextjs"],
+    "topics": ["state", "hooks", "rendering"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between props and state in React?",
+       "answer": "Props are passed in from the parent and are read-only for the component; state is owned by the component and changing it triggers a re-render.",
+       "keywords": ["parent", "read-only", "owned", "re-render"]},
+      {"difficulty": "medium",
+       "question": "What is the dependency array of `useEffect` for?",
+       "answer": "It lists the values the effect depends on; the effect runs again only when one of them changes. An empty array runs it once after mount; leaving it out runs it after every render.",
+       "keywords": ["depends", "changes", "empty", "every render"]},
+      {"difficulty": "hard",
+       "question": "Why does React need a `key` on list items, and why is the array index a bad key?",
+       "answer": "Keys let React match items between renders during reconciliation. The index changes when items are inserted, removed or reordered, so React can reuse the wrong component and keep the wrong state.",
+       "keywords": ["reconciliation", "match", "reorder", "wrong state"]}
+    ]
+  },
+  "docker": {
+    "name": "Docker",
+    "aliases": ["docker", "dockerfile", "docker-compose", "containers", "kubernetes"],
+    "topics": ["images", "containers", "layers", "volumes"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between a Docker image and a container?",
+       "answer": "An image is a read-only template built from a Dockerfile; a container is a running instance of an image with its own writable layer.",
+       "keywords": ["template", "read-only", "running instance", "writable"]},
+      {"difficulty": "medium",
+       "question": "How do you keep data when a container is removed?",
+       "answer": "Store it in a volume or a bind mount, which live outside the container's writable layer.",
+       "keywords": ["volume", "bind mount", "outside"]},
+      {"difficulty": "hard",
+       "question": "How does layer caching work when building an image, and how do you order a Dockerfile to benefit from it?",
+       "answer": "Each instruction creates a layer that is cached; when one changes, every later layer is rebuilt. Copy the dependency files and install dependencies before copying the source code, so code changes do not reinstall dependencies.",
+       "keywords": ["layer", "cache", "rebuilt", "dependencies", "before"]}
+    ]
+  },
+  "git": {
+    "name": "Git",
+    "aliases": ["git", "github", "gitlab"],
+    "topics": ["branching", "merging", "rebasing"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is the difference between `git fetch` and `git pull`?",
+       "answer": "fetch downloads new commits from the remote without changing your branch; pull is fetch followed by a merge (or rebase) into your current branch.",
+       "keywords": ["download", "remote", "merge", "current branch"]},
+      {"difficulty": "medium",
+       "question": "What is the difference between merge and rebase?",
+       "answer": "Merge joins two histories with a merge commit and keeps history as it happened. Rebase replays your commits on top of another branch, giving a linear history but rewriting commit hashes, so do not rebase shared branches.",
+       "keywords": ["merge commit", "replay", "linear", "rewriting", "shared"]},
+      {"difficulty": "hard",
+       "question": "You committed a secret and pushed it. What do you do?",
+       "answer": "Rotate (revoke) the secret immediately, because it must be considered leaked; then remove it from history with a tool such as git filter-repo and force-push, and tell collaborators to re-clone.",
+       "keywords": ["rotate", "revoke", "history", "filter-repo", "force-push"]}
+    ]
+  },
+  "machine-learning": {
+    "name": "Machine learning",
+    "aliases": ["machine learning", "deep learning", "scikit-learn", "pytorch", "tensorflow"],
+    "topics": ["overfitting", "evaluation", "training"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "What is overfitting and how do you detect it?",
+       "answer": "Overfitting is when a model memorises the training data and generalises badly. You detect it when training performance is much better than validation or test performance.",
+       "keywords": ["training data", "generalise", "validation", "test"]},
+      {"difficulty": "medium",
+       "question": "Why is accuracy a poor metric on imbalanced data, and what would you use instead?",
+       "answer": "With imbalanced classes a model can predict the majority class and still score high accuracy. Use precision, recall, F1 or ROC-AUC / PR-AUC instead.",
+       "keywords": ["majority class", "precision", "recall", "f1"]},
+      {"difficulty": "hard",
+       "question": "What is data leakage? Give an example.",
+       "answer": "Leakage is when information that will not be available at prediction time leaks into training, giving over-optimistic results. Example: scaling or selecting features on the full dataset before the train/test split.",
+       "keywords": ["prediction time", "over-optimistic", "before", "split"]}
+    ]
+  },
+  "rest-apis": {
+    "name": "REST APIs",
+    "aliases": ["rest", "rest api", "restful", "api design", "http api"],
+    "topics": ["http methods", "status codes", "idempotency"],
+    "questions": [
+      {"difficulty": "easy",
+       "question": "When should an API return 401 versus 403?",
+       "answer": "401 Unauthorized means the client is not authenticated (missing or invalid credentials); 403 Forbidden means it is authenticated but not allowed to do this.",
+       "keywords": ["authenticated", "credentials", "not allowed"]},
+      {"difficulty": "medium",
+       "question": "What does it mean that PUT is idempotent but POST is not?",
+       "answer": "Idempotent means repeating the same request has the same effect as sending it once. PUT replaces a resource, so repeating it changes nothing more; POST usually creates a new resource each time.",
+       "keywords": ["same effect", "once", "replace", "creates"]},
+      {"difficulty": "hard",
+       "question": "How would you paginate a large, frequently changing list in an API?",
+       "answer": "Use cursor (keyset) pagination: return a cursor based on a stable sort key, and the client sends it to get the next page. Offset pagination skips or repeats items when rows are inserted or deleted.",
+       "keywords": ["cursor", "keyset", "stable", "offset", "skip"]}
+    ]
+  }
+}

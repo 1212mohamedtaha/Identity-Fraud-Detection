@@ -1,18 +1,17 @@
-import random
-
 import pytest
 
-pytest.importorskip("torch")
-
-from fraud_detection import Engine  # noqa: E402
-from fraud_detection.policy import Policy  # noqa: E402
-
-
-@pytest.fixture(scope="session")
-def policy():
-    return Policy()
+from tests.toy_pack import ToyPack
 
 
 @pytest.fixture
-def engine(policy):
-    return Engine(policy=policy, rng=random.Random(0))
+def toy():
+    return ToyPack()
+
+
+@pytest.fixture(autouse=True)
+def no_llm_env(monkeypatch, tmp_path):
+    """Tests never call a real LLM, and trained policies go to a temp folder."""
+    for name in ("VERITY_LLM_PROVIDER", "VERITY_LLM_MODEL", "VERITY_LLM_BASE_URL",
+                 "VERITY_LLM_API_KEY", "ANTHROPIC_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.chdir(tmp_path)
