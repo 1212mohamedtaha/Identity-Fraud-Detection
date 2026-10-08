@@ -86,6 +86,14 @@ class DomainPack:
         """The simulated person answering. ``truth`` maps claim id -> real level."""
         return StatisticalRespondent(truth, rng or random.Random())
 
+    def fit_from_dataset(self, data_dir, out=None):
+        """Fit the pack's question parameters from a dataset (`verity data fit`)."""
+        raise NotImplementedError(f"Pack {self.name!r} has nothing to fit.")
+
+    def grader_report(self, data_dir, split="test"):
+        """Measure the pack's graders on a dataset (`verity data grader-eval`)."""
+        raise NotImplementedError(f"Pack {self.name!r} has no grader report.")
+
     def mock_llm(self, seed=0):
         """A fake LLM that plays this pack's prompts, for simulations; None if the pack has none."""
         return None

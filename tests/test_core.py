@@ -6,11 +6,12 @@ from verity.core.belief import BeliefModel, irt_pass_rates
 from verity.core.engine import Session, SessionError
 from verity.core.policies import GreedyPolicy
 from verity.core.simulation import StatisticalRespondent, evaluate, true_levels
-from verity.core.types import REFUTED, SUPPORTED, Claim, Observation, Probe
+from verity.core.types import REFUTED, SUPPORTED, Choice, Claim, Observation, Probe
 
 
-def probe(claim_id="c", p_true=0.9, p_false=0.3):
-    return Probe(id="p", claim_id=claim_id, question="?", p_true=p_true, p_false=p_false)
+def probe(claim_id="c", p_true=0.9, p_false=0.3, free_text=False):
+    choices = [] if free_text else [Choice("A", "yes"), Choice("B", "no")]
+    return Probe(id="p", claim_id=claim_id, question="?", choices=choices, p_true=p_true, p_false=p_false)
 
 
 def test_belief_moves_up_on_pass_and_down_on_fail():
@@ -23,12 +24,16 @@ def test_belief_moves_up_on_pass_and_down_on_fail():
     assert belief.probability("c") < 0.5
 
 
-def test_partial_score_moves_less_than_full_pass():
-    full, half = BeliefModel(), BeliefModel()
-    for b, score in ((full, 1.0), (half, 0.6)):
+def test_free_text_score_counts_by_distance_to_expected_scores():
+    """Expected scores 0.3 (claim false) and 0.9 (true): 0.8 supports, 0.6 is neutral, 0.4 refutes."""
+    results = {}
+    for score in (0.8, 0.6, 0.4):
+        b = BeliefModel()
         b.start([Claim("c", "claim")])
-        b.update(probe(), Observation("p", "c", "x", score))
-    assert 0.5 < half.probability("c") < full.probability("c")
+        b.update(probe(free_text=True), Observation("p", "c", "x", score))
+        results[score] = b.probability("c")
+    assert results[0.8] > 0.5 and results[0.4] < 0.5
+    assert results[0.6] == pytest.approx(0.5)
 
 
 def test_statuses_follow_thresholds():
@@ -125,8 +130,13 @@ def test_greedy_beats_random_on_simulated_people(toy):
     assert greedy["avg_questions"] <= rand["avg_questions"]
 
 
-def test_score_of_one_half_is_neutral():
+def test_partial_score_favours_the_level_that_expects_it():
+    """Regression: a 0.32 on a question where mid-level people average 0.32 must support
+    "mid", not count as a fail that favours "junior" (found by the calibration check)."""
+    claim = Claim("s", "skill", levels=("junior", "mid", "senior"), claimed_level=1)
     belief = BeliefModel()
-    belief.start([Claim("c", "claim")])
-    belief.update(probe(), Observation("p", "c", "x", 0.5))
-    assert belief.probability("c") == pytest.approx(0.5)
+    belief.start([claim])
+    hard = Probe(id="h", claim_id="s", question="?", pass_rates=[0.12, 0.32, 0.68])     # free text
+    for _ in range(4):
+        belief.update(hard, Observation("h", "s", "x", 0.32))
+    assert belief.level("s") == 1 and belief.probability("s") > 0.5

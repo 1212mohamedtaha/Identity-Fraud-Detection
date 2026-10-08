@@ -74,8 +74,20 @@ Use it with `--mock-llm` on `verity evaluate` and `verity train`.
 each bank question of its skills as a first question (no fatigue). Used to fit question
 parameters and to measure graders.
 
+## Using the dataset
+| Command | What it does |
+| --- | --- |
+| `verity evaluate cv --data datasets/cv [--mock-llm]` | Scores policies on the test split (`--split val` for tuning). |
+| `verity train cv --data datasets/cv [--mock-llm]` | Trains the RL policy on the train split. |
+| `verity data fit cv --data datasets/cv` | Fits each question's difficulty / discrimination and the score noise on the train split. |
+| `verity data grader-eval cv --data datasets/cv` | Compares keyword and mock-LLM grading with the true quality. |
+
+Rule: tune on `val`, report on `test`, never fit or train on `test`.
+
 ## Known limits
 - Answer texts are templated, not natural language; a real LLM would grade them differently.
 - Personas are independent across skills (no "knows Python, so probably knows Django").
 - The question bank is small (8 skills × 7 questions).
 - All rates and shares above are assumptions, chosen to be plausible, not measured.
+- Honest candidates sit exactly at their claimed level, so with person-to-person variation
+  many honest claims are genuinely ambiguous; this caps how well any method can do.

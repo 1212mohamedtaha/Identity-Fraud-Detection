@@ -102,6 +102,19 @@ train(pack, episodes=3000, out=pack.learned_policy_path())
 print(evaluate(pack, "learned", episodes=500))
 ```
 
+## Training on a synthetic dataset (CV pack)
+
+```bash
+verity data generate cv --size 3000              # simulated candidates -> datasets/cv/
+verity data grader-eval cv --data datasets/cv    # how good is each grader?
+verity data fit cv --data datasets/cv            # fit question difficulty + score noise
+verity evaluate cv --data datasets/cv            # policies on the held-out test split
+verity train cv --data datasets/cv --mock-llm    # train on the train split, LLM path mocked
+verity evaluate cv --data datasets/cv --mock-llm
+```
+
+What the dataset contains and its limits: [../specs/dataset.md](../specs/dataset.md).
+
 ## Making training more realistic
 
 The simulator is only as good as its assumptions (`p_true`, `p_false` per question). To

@@ -127,6 +127,37 @@ def cmd_data_generate(args):
     print(f"Wrote {len(cases)} cases to {out}/ (train 70%, val 15%, test 15%).")
 
 
+def cmd_data_fit(args):
+    from .packs import get_pack
+
+    pack = get_pack(args.pack)
+    try:
+        fitted = pack.fit_from_dataset(args.data, args.out)
+    except NotImplementedError as exc:
+        raise SystemExit(str(exc)) from exc
+    questions = fitted.get("questions", fitted)
+    print(f"Fitted {len(questions)} questions from {args.data} (train split).")
+    for question, f in list(questions.items())[:5]:
+        print(f"  difficulty {f['difficulty']:5.2f}  discrimination {f['discrimination']:.1f}  {question[:60]}")
+    if len(questions) > 5:
+        print(f"  ... and {len(questions) - 5} more")
+    for name, value in fitted.get("score_noise", {}).items():
+        print(f"  score noise ({name} grading): {value}")
+
+
+def cmd_data_grader_eval(args):
+    from .packs import get_pack
+
+    pack = get_pack(args.pack)
+    try:
+        report = pack.grader_report(args.data, args.split)
+    except NotImplementedError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(f"{'grader':10} {'answers':>8} {'error':>7} {'bias':>7} {'pass agreement':>15}")
+    for r in report:
+        print(f"{r['grader']:10} {r['answers']:8d} {r['mae']:7.3f} {r['bias']:+7.3f} {r['pass_agreement']:15.1%}")
+
+
 def add_simulation_options(p):
     p.add_argument("--data", help="dataset folder (from `verity data generate`); default: fresh simulated people")
     p.add_argument("--mock-llm", action="store_true", help="run the pack's LLM code path with its mock LLM")
@@ -176,6 +207,18 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", help="default: datasets/<pack>")
     p.set_defaults(func=cmd_data_generate)
+
+    p = data.add_parser("fit", help="fit question parameters from a dataset")
+    p.add_argument("pack")
+    p.add_argument("--data", required=True)
+    p.add_argument("--out", help="default: the pack's fitted-parameters file")
+    p.set_defaults(func=cmd_data_fit)
+
+    p = data.add_parser("grader-eval", help="measure graders against the true answer quality")
+    p.add_argument("pack")
+    p.add_argument("--data", required=True)
+    p.add_argument("--split", default="test", choices=["train", "val", "test"])
+    p.set_defaults(func=cmd_data_grader_eval)
 
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")

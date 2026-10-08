@@ -77,15 +77,21 @@ Per claim, a probability for every level. Start (`prior_for`): `prior` (default 
 evenly over the levels where the claim holds, `1 - prior` over the levels below it
 (yes/no: `[1 - prior, prior]`; a claim at level 0 starts uniform).
 
-After an observation with score `s` on a probe with pass rates `r`, each level's weight is
-multiplied by `s * r[level] + (1 - s) * (1 - r[level])` (rates clamped to `[0.01, 0.99]`),
-renormalised, then given a floor of 0.001 and renormalised again so no level is ever ruled
-out by one answer. `s = 1` is a pass, `s = 0` a fail, `s = 0.5` is neutral.
+After an observation with score `s` on a probe with pass rates `r` (rates clamped to
+`[0.01, 0.99]`), each level's weight is multiplied by the likelihood of `s` at that level:
+
+- multiple-choice probe: `r[level] ** s * (1 - r[level]) ** (1 - s)` (= `r` for a pass, `1 - r` for a fail);
+- free-text probe: `exp(-(s - r[level])² / (2 · score_noise²))`: `r[level]` is the expected score
+  at that level, `score_noise` (default 0.2) the typical spread of real scores around it.
+
+Then weights are renormalised, given a floor of 0.001 and renormalised again so no level is
+ever ruled out by one answer. See decision 0006.
 
 - `probability(claim_id)`: total weight on levels where the claim holds.
 - `level(claim_id)`: most likely level.
 - `status`: `supported` if `p >= accept`, `refuted` if `p <= reject`, else `uncertain`.
-- `expected_gain(probe)`: expected drop in entropy (bits) of "the claim holds" from asking the probe.
+- `expected_gain(probe)`: expected drop in entropy (bits) of "the claim holds" from asking the probe,
+  averaged over the possible answers (pass/fail, or free-text scores 0, 0.1, …, 1).
 
 ## Policies (`policies.py`)
 
@@ -107,6 +113,13 @@ The constructor takes `llm` (an `LLM` or `None`).
 
 `input_fields` items: `{"name", "label", "type": "text"|"textarea", "required", "placeholder"}`.
 The UI renders them as the start form; their values arrive as `inputs[name]` (strings).
+
+## Fitting (`fitting.py`)
+
+`fit_item(observations, n_levels)`: for answers `(level, score)` to one question, the
+`(difficulty, discrimination)` of `irt_pass_rates` that maximises
+`Σ score·log r + (1 − score)·log(1 − r)`, found by grid search (difficulty −1..n_levels in 0.1
+steps; discrimination 0.8, 1.2, 1.7, 2.4, 3.2).
 
 ## Simulation (`simulation.py`)
 

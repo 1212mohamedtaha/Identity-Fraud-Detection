@@ -33,7 +33,9 @@ A claim "Knows SQL at mid level" holds for real level mid or senior.
 
 Claim ids are slugs of the skill name (`machine-learning`); text "Knows <skill> at <level> level".
 
-Pass rates per level come from `irt_pass_rates(5, difficulty_level)`:
+Expected scores per level come from `irt_pass_rates(5, difficulty, discrimination)`. When
+`data/fitted_questions.json` has the question (see "Fitted parameters"), the fitted values are
+used; otherwise the difficulty label gives:
 
 | Difficulty | 50/50 at level | none | beginner | junior | mid | senior |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -41,7 +43,17 @@ Pass rates per level come from `irt_pass_rates(5, difficulty_level)`:
 | medium | 2.5 | 0.06 | 0.12 | 0.32 | 0.68 | 0.88 |
 | hard | 3.5 | 0.05 | 0.06 | 0.12 | 0.32 | 0.68 |
 
-`max_questions = 15`, `show_feedback = True`, `accept = 0.85`, `reject = 0.15`.
+`max_questions = 15`, `show_feedback = True`, `accept = 0.9`, `reject = 0.1`.
+
+## Fitted parameters (`data/fitted_questions.json`)
+Written by `verity data fit cv --data datasets/cv` from the dataset's train split (see
+`tuning.py`): `{"questions": {text: {difficulty, discrimination, answers}}, "score_noise": {"llm", "keyword"}}`.
+The belief model uses `score_noise["llm"]` when an LLM grades and `score_noise["keyword"]` offline.
+The committed file was fitted on a 3000-person synthetic dataset (seed 0).
+
+`verity data grader-eval cv --data datasets/cv` compares keyword and mock-LLM grading with the
+true answer quality (current synthetic data, test split: keyword error 0.14 / 88% pass agreement,
+mock LLM 0.06 / 96%).
 
 ## Question bank (`data/skills.json`)
 `{key: {name, aliases, topics, questions: [{difficulty, question, answer, keywords}]}}`.

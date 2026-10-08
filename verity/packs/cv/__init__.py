@@ -11,7 +11,7 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-from ...core.belief import irt_pass_rates
+from ...core.belief import BeliefModel, irt_pass_rates
 from ...core.graph import KnowledgeGraph
 from ...core.interfaces import Assessor, ClaimExtractor, KnowledgeSource, ProbeGenerator
 from ...core.pack import DomainPack
@@ -48,10 +48,30 @@ def skill_claim(claim_id, skill, level_word, evidence="", bank=None):
                  data={"skill": skill, "level": LEVELS[level], "evidence": evidence, "bank": bank})
 
 
+FITTED_FILE = HERE / "data" / "fitted_questions.json"
+
+
 @lru_cache(maxsize=None)
 def skill_bank():
     with open(HERE / "data" / "skills.json", encoding="utf-8") as f:
         return json.load(f)
+
+
+DEFAULT_SCORE_NOISE = {"llm": 0.2, "keyword": 0.27}
+
+
+@lru_cache(maxsize=None)
+def fitted_parameters():
+    """Parameters fitted from data with `verity data fit cv` (see tuning.py):
+    ``{"questions": {text: {"difficulty", "discrimination", "answers"}}, "score_noise": {...}}``."""
+    if not FITTED_FILE.exists():
+        return {"questions": {}, "score_noise": DEFAULT_SCORE_NOISE}
+    with open(FITTED_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def fitted_questions():
+    return fitted_parameters()["questions"]
 
 
 def slug(text):
@@ -154,8 +174,14 @@ class SkillGraph(KnowledgeSource):
 
 # ---------------------------------------------------------------- questions
 def make_probe(probe_id, claim_id, difficulty, question, answer, key_points):
+    """A free-text probe. Pass rates come from fitted parameters when this question was
+    fitted on data, otherwise from its difficulty label."""
     difficulty = difficulty if difficulty in DIFFICULTY_LEVEL else "medium"
-    rates = irt_pass_rates(len(LEVELS), DIFFICULTY_LEVEL[difficulty])
+    fitted = fitted_questions().get(question)
+    if fitted:
+        rates = irt_pass_rates(len(LEVELS), fitted["difficulty"], fitted["discrimination"])
+    else:
+        rates = irt_pass_rates(len(LEVELS), DIFFICULTY_LEVEL[difficulty])
     return Probe(id=probe_id, claim_id=claim_id, question=question, answer=answer,
                  rubric="; ".join(key_points), difficulty=difficulty, pass_rates=rates,
                  data={"key_points": list(key_points)})
@@ -253,8 +279,8 @@ class CVPack(DomainPack):
     ]
     max_questions = 15
     show_feedback = True
-    accept = 0.85
-    reject = 0.15
+    accept = 0.9
+    reject = 0.1
 
     def claim_extractor(self):
         return CVClaims(self.llm)
@@ -267,6 +293,11 @@ class CVPack(DomainPack):
 
     def assessor(self):
         return AnswerGrader(self.llm)
+
+    def belief_model(self):
+        """Score noise measured from data: smaller for LLM grading than for keyword grading."""
+        noise = fitted_parameters()["score_noise"]["keyword" if self.llm is None else "llm"]
+        return BeliefModel(prior=self.prior, accept=self.accept, reject=self.reject, score_noise=noise)
 
     # ----- simulation: synthetic candidates (see simulate.py and docs/specs/dataset.md)
     def make_case(self, rng, index):
@@ -293,3 +324,11 @@ class CVPack(DomainPack):
     def write_dataset_extras(self, cases, out, rng):
         from .simulate import write_answers
         write_answers(cases, out, rng)
+
+    def fit_from_dataset(self, data_dir, out=None):
+        from .tuning import fit_questions
+        return fit_questions(data_dir, out or FITTED_FILE)
+
+    def grader_report(self, data_dir, split="test"):
+        from .tuning import grader_report
+        return grader_report(data_dir, split)

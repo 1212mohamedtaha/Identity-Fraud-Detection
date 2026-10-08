@@ -1,11 +1,18 @@
 """Bayesian belief about each claim.
 
 For every claim we keep a probability for each level of its scale (two levels for a
-yes/no claim). A probe says how likely someone at each level is to pass it
-(``probe.pass_rates``); after an answer, Bayes' rule re-weighs the levels.
+yes/no claim). A probe says how well someone at each level does on it
+(``probe.pass_rates``: the chance of passing, which is also the expected score); after an
+answer, Bayes' rule re-weighs the levels.
 
-A score is read as "the chance the answer passed": 1.0 is a pass, 0.0 a fail, 0.5 is
-neutral, and a decent free-text answer (say 0.7) counts as mild evidence of a higher level.
+How an answer counts (see docs/decisions/0006-score-likelihood.md):
+
+- Multiple choice: pass or fail. Likelihood at each level is ``rate`` for a pass and
+  ``1 - rate`` for a fail.
+- Free text: the grader's score is "the expected score at the person's level, plus noise".
+  Likelihood is a bell curve around the expected score with width ``score_noise``. So a 0.3
+  on a hard question, typical for a mid-level person, supports "mid" rather than counting as
+  a fail.
 
 The claim's probability of being true is the total weight on levels at or above the
 claimed level.
@@ -49,13 +56,17 @@ def default_pass_rates(claim, probe):
     return [probe.p_true if claim.holds_at(level) else probe.p_false for level in range(len(claim.levels))]
 
 
+SCORE_GRID = [i / 10 for i in range(11)]    # free-text scores considered when looking ahead
+
+
 class BeliefModel:
     """Probability per level, per claim. Subclass to use a different statistical model."""
 
-    def __init__(self, prior=0.5, accept=0.9, reject=0.1):
+    def __init__(self, prior=0.5, accept=0.9, reject=0.1, score_noise=0.2):
         self.prior = prior       # starting chance that a claim is true
         self.accept = accept     # probability at which a claim counts as supported
         self.reject = reject     # probability at which a claim counts as refuted
+        self.score_noise = score_noise   # spread of free-text scores around their expected value
         self.claims = {}
         self.weights = {}        # claim id -> list of probabilities, one per level
 
@@ -72,13 +83,17 @@ class BeliefModel:
         above, below = n - claimed, claimed
         return [self.prior / above if claim.holds_at(level) else (1 - self.prior) / below for level in range(n)]
 
-    def posterior(self, weights, rates, score):
+    def likelihood(self, rate, score, free_text):
+        """How likely ``score`` is from someone whose expected score / pass chance is ``rate``."""
+        rate = clamp(rate)
+        if free_text:
+            return math.exp(-((score - rate) ** 2) / (2 * self.score_noise ** 2))
+        return rate ** score * (1 - rate) ** (1 - score)
+
+    def posterior(self, weights, rates, score, free_text=False):
         """New level weights after an answer with ``score`` to a probe with ``rates``."""
         s = min(max(score, 0.0), 1.0)
-        new = []
-        for weight, rate in zip(weights, rates):
-            rate = clamp(rate)
-            new.append(weight * (s * rate + (1 - s) * (1 - rate)))
+        new = [w * self.likelihood(rate, s, free_text) for w, rate in zip(weights, rates)]
         total = sum(new)
         new = [w / total + FLOOR for w in new]
         total = sum(new)
@@ -89,7 +104,7 @@ class BeliefModel:
 
     def update(self, probe, observation):
         self.weights[probe.claim_id] = self.posterior(
-            self.weights[probe.claim_id], self.rates(probe), observation.score)
+            self.weights[probe.claim_id], self.rates(probe), observation.score, probe.is_free_text)
 
     def truth_probability(self, claim_id, weights):
         claim = self.claims[claim_id]
@@ -113,10 +128,15 @@ class BeliefModel:
         return UNCERTAIN
 
     def expected_gain(self, probe):
-        """How much asking ``probe`` is expected to reduce uncertainty about the claim (bits)."""
+        """How much asking ``probe`` is expected to reduce uncertainty about the claim (bits):
+        current uncertainty minus the average uncertainty over the possible answers."""
         weights, rates = self.weights[probe.claim_id], self.rates(probe)
-        p_pass = sum(w * clamp(r) for w, r in zip(weights, rates))
-        if_pass = self.truth_probability(probe.claim_id, self.posterior(weights, rates, 1.0))
-        if_fail = self.truth_probability(probe.claim_id, self.posterior(weights, rates, 0.0))
-        now = self.probability(probe.claim_id)
-        return entropy(now) - (p_pass * entropy(if_pass) + (1 - p_pass) * entropy(if_fail))
+        outcomes = SCORE_GRID if probe.is_free_text else [0.0, 1.0]
+        chances = [sum(w * self.likelihood(r, s, probe.is_free_text) for w, r in zip(weights, rates))
+                   for s in outcomes]
+        total = sum(chances)
+        after = 0.0
+        for s, chance in zip(outcomes, chances):
+            new = self.posterior(weights, rates, s, probe.is_free_text)
+            after += chance / total * entropy(self.truth_probability(probe.claim_id, new))
+        return entropy(self.probability(probe.claim_id)) - after
