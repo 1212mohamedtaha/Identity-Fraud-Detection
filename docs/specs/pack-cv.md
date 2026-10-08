@@ -43,12 +43,15 @@ used; otherwise the difficulty label gives:
 | medium | 2.5 | 0.06 | 0.12 | 0.32 | 0.68 | 0.88 |
 | hard | 3.5 | 0.05 | 0.06 | 0.12 | 0.32 | 0.68 |
 
-`max_questions = 15`, `show_feedback = True`, `accept = 0.9`, `reject = 0.1`.
+`max_questions = 15`, `show_feedback = True`, `accept = 0.9`, `reject = 0.1`, `person_spread = 0.1`
+(tuned on the validation split; the data measures 0.48, see [../modeling.md](../modeling.md)).
 
 ## Fitted parameters (`data/fitted_questions.json`)
 Written by `verity data fit cv --data datasets/cv` from the dataset's train split (see
-`tuning.py`): `{"questions": {text: {difficulty, discrimination, answers}}, "score_noise": {"llm", "keyword"}}`.
-The belief model uses `score_noise["llm"]` when an LLM grades and `score_noise["keyword"]` offline.
+`tuning.py`):
+`{"questions": {text: {difficulty, discrimination, answers}}, "person_spread", "fatigue", "score_noise": {"llm", "keyword"}, "gap_prior": {gap: share}}`.
+The belief model uses the fitted `fatigue`, `gap_prior` (base rate of real − claimed level) and
+`score_noise["llm"]` when an LLM grades / `score_noise["keyword"]` offline.
 The committed file was fitted on a 3000-person synthetic dataset (seed 0).
 
 `verity data grader-eval cv --data datasets/cv` compares keyword and mock-LLM grading with the

@@ -141,6 +141,10 @@ def cmd_data_fit(args):
         print(f"  difficulty {f['difficulty']:5.2f}  discrimination {f['discrimination']:.1f}  {question[:60]}")
     if len(questions) > 5:
         print(f"  ... and {len(questions) - 5} more")
+    if "person_spread" in fitted:
+        print(f"  person spread: {fitted['person_spread']} levels; fatigue: {fitted.get('fatigue', 0)} levels/question")
+    if "gap_prior" in fitted:
+        print("  real minus claimed level: " + ", ".join(f"{g}: {p:.0%}" for g, p in fitted["gap_prior"].items()))
     for name, value in fitted.get("score_noise", {}).items():
         print(f"  score noise ({name} grading): {value}")
 

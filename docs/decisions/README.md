@@ -11,3 +11,4 @@ Add a new numbered file when you make a choice someone might later question.
 | [0004](0004-fastapi-and-plain-js-ui.md) | FastAPI for the API, plain HTML/JS for the UI |
 | [0005](0005-yes-no-and-leveled-claims.md) | One model for yes/no and leveled claims |
 | [0006](0006-score-likelihood.md) | How a graded answer counts as evidence |
+| [0007](0007-person-factor-fatigue-and-empirical-prior.md) | Person factor, fatigue and an empirical prior |

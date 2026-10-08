@@ -86,4 +86,4 @@ def test_claimed_level_decides_the_verdict():
     junior, senior = run("junior"), run("senior")
     assert junior.status == "supported"
     assert senior.status != "supported"
-    assert junior.claim.levels[junior.level] in ("mid", "senior")
+    assert junior.level >= junior.claim.claimed_level

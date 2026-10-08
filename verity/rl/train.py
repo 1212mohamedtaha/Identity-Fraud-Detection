@@ -3,7 +3,7 @@
 Each episode: simulate a person whose truth we know, run a full session with the
 exploring policy, then reward it (see verity.core.simulation.episode_reward):
 
-    +1 if the verdict is right, -0.25 if it ends "uncertain", -1 if it is wrong,
+    +1 if the verdict is right, -0.25 if it ends "uncertain", -3 if it is wrong,
     minus ``question_cost`` for every question asked.
 
 The policy is nudged towards the choices made in episodes that scored above average.

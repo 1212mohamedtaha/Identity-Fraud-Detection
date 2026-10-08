@@ -140,3 +140,46 @@ def test_partial_score_favours_the_level_that_expects_it():
     for _ in range(4):
         belief.update(hard, Observation("h", "s", "x", 0.32))
     assert belief.level("s") == 1 and belief.probability("s") > 0.5
+
+
+def test_person_factor_lets_one_claim_inform_another():
+    """Someone who aces one skill is probably sharp: their other skill's expected level rises."""
+    levels = ("none", "junior", "mid", "senior")
+    claims = [Claim("a", "A", levels=levels, claimed_level=2), Claim("b", "B", levels=levels, claimed_level=2)]
+    hard = Probe(id="h", claim_id="a", question="?", pass_rates=irt_pass_rates(4, 2.5))
+    plain, with_person = BeliefModel(), BeliefModel(person_spread=0.5)
+    for belief in (plain, with_person):
+        belief.start(claims)
+        for _ in range(3):
+            belief.update(hard, Observation("h", "a", "x", 0.95))
+    assert plain.probability("b") == pytest.approx(0.5)
+    assert with_person.person_offset() > 0
+    assert BeliefModel(person_spread=0).person_offset() == 0
+
+
+def test_no_person_factor_and_no_fatigue_is_the_plain_model():
+    claim = Claim("c", "claim")
+    a, b = BeliefModel(), BeliefModel(person_spread=0.0, fatigue=0.0)
+    for belief in (a, b):
+        belief.start([claim])
+        belief.update(probe(), Observation("p", "c", "x", 1.0))
+    assert a.probability("c") == b.probability("c")
+
+
+def test_fatigue_makes_late_failures_count_less():
+    claim = Claim("s", "skill", levels=("none", "junior", "mid"), claimed_level=2)
+    q = Probe(id="q", claim_id="s", question="?", pass_rates=irt_pass_rates(3, 1.5))
+    rested, tired = BeliefModel(), BeliefModel(fatigue=0.1)
+    for belief in (rested, tired):
+        belief.start([claim])
+        for _ in range(5):
+            belief.update(q, Observation("q", "s", "x", 0.4))
+    assert tired.probability("s") > rested.probability("s")
+
+
+def test_gap_prior_sets_the_starting_belief():
+    claim = Claim("s", "skill", levels=("none", "junior", "mid", "senior"), claimed_level=2)
+    belief = BeliefModel(gap_prior={0: 0.7, -1: 0.2, -2: 0.1})
+    belief.start([claim])
+    assert belief.probability("s") == pytest.approx((0.7 + 0.01 + 0.01) / (0.7 + 0.2 + 0.1 + 0.04))
+    assert belief.level("s") == 2

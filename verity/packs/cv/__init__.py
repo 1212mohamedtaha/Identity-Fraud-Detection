@@ -281,6 +281,10 @@ class CVPack(DomainPack):
     show_feedback = True
     accept = 0.9
     reject = 0.1
+    # Person factor width in levels. The data measures 0.48, but on the validation split a
+    # small value gives the best reward; larger values make the model more cautious (fewer
+    # wrong verdicts, more "not sure yet"). See docs/modeling.md.
+    person_spread = 0.1
 
     def claim_extractor(self):
         return CVClaims(self.llm)
@@ -295,9 +299,14 @@ class CVPack(DomainPack):
         return AnswerGrader(self.llm)
 
     def belief_model(self):
-        """Score noise measured from data: smaller for LLM grading than for keyword grading."""
-        noise = fitted_parameters()["score_noise"]["keyword" if self.llm is None else "llm"]
-        return BeliefModel(prior=self.prior, accept=self.accept, reject=self.reject, score_noise=noise)
+        """Parameters measured from data (`verity data fit cv`): score noise (smaller for LLM
+        grading than for keyword grading), fatigue and the base rate of over-claiming."""
+        fitted = fitted_parameters()
+        noise = fitted["score_noise"]["keyword" if self.llm is None else "llm"]
+        gap_prior = {int(gap): p for gap, p in fitted.get("gap_prior", {}).items()} or None
+        return BeliefModel(prior=self.prior, accept=self.accept, reject=self.reject, score_noise=noise,
+                           person_spread=self.person_spread, fatigue=fitted.get("fatigue", 0.0),
+                           gap_prior=gap_prior)
 
     # ----- simulation: synthetic candidates (see simulate.py and docs/specs/dataset.md)
     def make_case(self, rng, index):

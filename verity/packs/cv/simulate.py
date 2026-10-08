@@ -156,17 +156,19 @@ class MockInterviewLLM(LLM):
 
 # ---------------------------------------------------------------- dataset files
 def write_answers(cases, out, rng):
-    """answers.jsonl: every case answering every bank question of its skills (as the first
-    question of a session), with the true quality. Used to fit question difficulty and to
-    measure graders. questions.json: each bank question's hidden difficulty."""
+    """answers.jsonl: every case answering every bank question of its skills, each at a random
+    position in a session (0 = first question, so fatigue applies), with the true quality.
+    Used to fit question parameters, fatigue and person spread, and to measure graders.
+    questions.json: each bank question's hidden difficulty."""
     rows, questions = [], {}
     for case in cases:
         for skill in case["truth"]:
             for i, q in enumerate(skill_bank()[skill]["questions"]):
-                quality = answer_quality(case, skill, q["question"], q["difficulty"], 0, rng)
+                position = rng.randrange(12)
+                quality = answer_quality(case, skill, q["question"], q["difficulty"], position, rng)
                 rows.append({
                     "case": case["id"], "split": case["split"], "skill": skill, "question_id": f"{skill}/{i}",
-                    "level": case["truth"][skill], "difficulty": q["difficulty"],
+                    "level": case["truth"][skill], "position": position, "difficulty": q["difficulty"],
                     "quality": round(quality, 3), "answer": write_answer(q["keywords"], quality, rng),
                 })
                 hidden = hidden_difficulty(q["question"], q["difficulty"])

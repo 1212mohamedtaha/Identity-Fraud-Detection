@@ -23,7 +23,7 @@ Three policies exist out of the box:
    e.g. "really works at X, but lied about the university".
 2. **Play a full session.** A simulated respondent answers each question: someone with a
    true claim passes a question with probability `p_true`, someone lying with `p_false`.
-3. **Score the session.** +1 for a correct verdict, −1 for a wrong one, −0.25 if it ended
+3. **Score the session.** +1 for a correct verdict, −3 for a wrong one, −0.25 if it ended
    "uncertain", and −0.02 for every question asked (shorter is better).
 4. **Learn.** Choices made in sessions that scored above average become more likely
    (REINFORCE). Repeat a few thousand times.

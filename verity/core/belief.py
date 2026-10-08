@@ -36,6 +36,11 @@ def entropy(p):
     return -(p * math.log2(p) + (1 - p) * math.log2(1 - p))
 
 
+def irt_rate(position, difficulty, discrimination=1.7, guess=0.05, slip=0.05):
+    """Pass chance at a (possibly fractional) position on the level scale (see irt_pass_rates)."""
+    return guess + (1 - guess - slip) / (1 + math.exp(-discrimination * (position - difficulty)))
+
+
 def irt_pass_rates(n_levels, difficulty, discrimination=1.7, guess=0.05, slip=0.05):
     """Pass chance per level from item response theory (a "3-parameter logistic" curve).
 
@@ -43,11 +48,7 @@ def irt_pass_rates(n_levels, difficulty, discrimination=1.7, guess=0.05, slip=0.
     a 50/50 chance; ``discrimination`` is how sharply the chance rises around it;
     ``guess`` is the chance of passing by luck; ``slip`` the chance of failing anyway.
     """
-    rates = []
-    for level in range(n_levels):
-        curve = 1 / (1 + math.exp(-discrimination * (level - difficulty)))
-        rates.append(guess + (1 - guess - slip) * curve)
-    return rates
+    return [irt_rate(level, difficulty, discrimination, guess, slip) for level in range(n_levels)]
 
 
 def default_pass_rates(claim, probe):
@@ -59,25 +60,77 @@ def default_pass_rates(claim, probe):
 SCORE_GRID = [i / 10 for i in range(11)]    # free-text scores considered when looking ahead
 
 
-class BeliefModel:
-    """Probability per level, per claim. Subclass to use a different statistical model."""
+def rate_at(rates, position):
+    """Pass rate at a (possibly fractional) level, by straight-line interpolation."""
+    position = min(max(position, 0.0), len(rates) - 1)
+    low = int(position)
+    high = min(low + 1, len(rates) - 1)
+    return rates[low] + (rates[high] - rates[low]) * (position - low)
 
-    def __init__(self, prior=0.5, accept=0.9, reject=0.1, score_noise=0.2):
+
+def person_grid(spread, points=7):
+    """Possible person offsets (in levels) and their prior weights: a normal distribution
+    with standard deviation ``spread``, cut at two standard deviations. One point at 0
+    when ``spread`` is 0 (no person factor)."""
+    if spread <= 0:
+        return [0.0], [1.0]
+    offsets = [spread * (-2 + 4 * i / (points - 1)) for i in range(points)]
+    weights = [math.exp(-0.5 * (o / spread) ** 2) for o in offsets]
+    total = sum(weights)
+    return offsets, [w / total for w in weights]
+
+
+class BeliefModel:
+    """Probability per level, per claim, plus an optional person factor.
+
+    The person factor is a hidden offset (in levels) shared by all claims of one session:
+    someone sharper or more tired than their level performs as if they were a bit higher or
+    lower on every question. Keeping a small grid of possible offsets lets answers on one
+    claim inform the others, instead of treating every answer as fully independent.
+    With ``person_spread = 0`` the model is a plain per-claim model.
+
+    ``fatigue`` is how many levels a person drops per question already answered in the
+    session (0 = no drift).
+
+    ``gap_prior`` (optional) is the base rate of "real level minus claimed level", e.g.
+    ``{0: 0.6, -1: 0.2, -2: 0.15, -3: 0.05}``: how far people's real level usually is from what
+    they claim. When given, it replaces ``prior`` as the starting belief (see prior_for).
+    """
+
+    def __init__(self, prior=0.5, accept=0.9, reject=0.1, score_noise=0.2, person_spread=0.0, fatigue=0.0,
+                 gap_prior=None):
         self.prior = prior       # starting chance that a claim is true
         self.accept = accept     # probability at which a claim counts as supported
         self.reject = reject     # probability at which a claim counts as refuted
-        self.score_noise = score_noise   # spread of free-text scores around their expected value
+        self.score_noise = score_noise       # spread of free-text scores around their expected value
+        self.person_spread = person_spread   # spread of the person factor, in levels
+        self.fatigue = fatigue               # levels lost per question already answered
+        self.gap_prior = gap_prior           # base rate of (real level - claimed level), or None
+        self.answered = 0
         self.claims = {}
-        self.weights = {}        # claim id -> list of probabilities, one per level
+        self.offsets, self.offset_prior = person_grid(person_spread)
+        self.offset_weights = list(self.offset_prior)
+        self.weights = {}        # claim id -> one list of level probabilities per person offset
 
     def start(self, claims):
         self.claims = {claim.id: claim for claim in claims}
-        self.weights = {claim.id: self.prior_for(claim) for claim in claims}
+        self.answered = 0
+        self.offset_weights = list(self.offset_prior)
+        self.weights = {claim.id: [self.prior_for(claim) for _ in self.offsets] for claim in claims}
 
     def prior_for(self, claim):
-        """``prior`` spread evenly over the levels where the claim holds, the rest over the
-        levels below. For a yes/no claim that is simply [1 - prior, prior]."""
+        """Starting probability of each level.
+
+        With ``gap_prior``: each level gets the base rate of its gap to the claimed level
+        (a small floor for gaps never seen), renormalised over the claim's levels.
+        Otherwise: ``prior`` spread evenly over the levels where the claim holds, the rest over
+        the levels below; for a yes/no claim that is simply [1 - prior, prior].
+        """
         n, claimed = len(claim.levels), claim.claimed_level
+        if self.gap_prior:
+            weights = [self.gap_prior.get(level - claimed, 0.0) + 0.01 for level in range(n)]
+            total = sum(weights)
+            return [w / total for w in weights]
         if claimed == 0:
             return [1 / n] * n
         above, below = n - claimed, claimed
@@ -90,21 +143,35 @@ class BeliefModel:
             return math.exp(-((score - rate) ** 2) / (2 * self.score_noise ** 2))
         return rate ** score * (1 - rate) ** (1 - score)
 
-    def posterior(self, weights, rates, score, free_text=False):
-        """New level weights after an answer with ``score`` to a probe with ``rates``."""
-        s = min(max(score, 0.0), 1.0)
-        new = [w * self.likelihood(rate, s, free_text) for w, rate in zip(weights, rates)]
-        total = sum(new)
-        new = [w / total + FLOOR for w in new]
-        total = sum(new)
-        return [w / total for w in new]
+    def level_likelihoods(self, rates, offset, score, free_text):
+        """Likelihood of ``score`` at every level, for a person with ``offset``, at this point
+        of the session (after ``answered`` questions)."""
+        shift = offset - self.fatigue * self.answered
+        return [self.likelihood(rate_at(rates, level + shift), score, free_text) for level in range(len(rates))]
 
     def rates(self, probe):
         return probe.pass_rates or default_pass_rates(self.claims[probe.claim_id], probe)
 
     def update(self, probe, observation):
-        self.weights[probe.claim_id] = self.posterior(
-            self.weights[probe.claim_id], self.rates(probe), observation.score, probe.is_free_text)
+        rates, score = self.rates(probe), min(max(observation.score, 0.0), 1.0)
+        for k, offset in enumerate(self.offsets):
+            old = self.weights[probe.claim_id][k]
+            likes = self.level_likelihoods(rates, offset, score, probe.is_free_text)
+            new = [w * like for w, like in zip(old, likes)]
+            evidence = sum(new)                       # how well this offset explains the answer
+            new = [w / evidence + FLOOR for w in new]
+            total = sum(new)
+            self.weights[probe.claim_id][k] = [w / total for w in new]
+            self.offset_weights[k] *= evidence
+        total = sum(self.offset_weights)
+        self.offset_weights = [w / total for w in self.offset_weights]
+        self.answered += 1
+
+    def level_weights(self, claim_id):
+        """Probability of each level, averaged over the person offsets."""
+        per_offset = self.weights[claim_id]
+        return [sum(pk * levels[i] for pk, levels in zip(self.offset_weights, per_offset))
+                for i in range(len(per_offset[0]))]
 
     def truth_probability(self, claim_id, weights):
         claim = self.claims[claim_id]
@@ -112,12 +179,16 @@ class BeliefModel:
 
     def probability(self, claim_id):
         """Belief that the claim is true."""
-        return self.truth_probability(claim_id, self.weights[claim_id])
+        return self.truth_probability(claim_id, self.level_weights(claim_id))
 
     def level(self, claim_id):
         """The most likely real level (index into the claim's levels)."""
-        weights = self.weights[claim_id]
+        weights = self.level_weights(claim_id)
         return max(range(len(weights)), key=weights.__getitem__)
+
+    def person_offset(self):
+        """Expected person offset in levels (0 without a person factor)."""
+        return sum(o * w for o, w in zip(self.offsets, self.offset_weights))
 
     def status(self, claim_id):
         p = self.probability(claim_id)
@@ -130,13 +201,19 @@ class BeliefModel:
     def expected_gain(self, probe):
         """How much asking ``probe`` is expected to reduce uncertainty about the claim (bits):
         current uncertainty minus the average uncertainty over the possible answers."""
-        weights, rates = self.weights[probe.claim_id], self.rates(probe)
+        claim_id, rates = probe.claim_id, self.rates(probe)
         outcomes = SCORE_GRID if probe.is_free_text else [0.0, 1.0]
-        chances = [sum(w * self.likelihood(r, s, probe.is_free_text) for w, r in zip(weights, rates))
-                   for s in outcomes]
-        total = sum(chances)
-        after = 0.0
-        for s, chance in zip(outcomes, chances):
-            new = self.posterior(weights, rates, s, probe.is_free_text)
-            after += chance / total * entropy(self.truth_probability(probe.claim_id, new))
-        return entropy(self.probability(probe.claim_id)) - after
+        joint = []           # per outcome: (chance, chance the claim holds afterwards)
+        for score in outcomes:
+            total = holds = 0.0
+            for pk, offset, levels in zip(self.offset_weights, self.offsets, self.weights[claim_id]):
+                likes = self.level_likelihoods(rates, offset, score, probe.is_free_text)
+                for level, (w, like) in enumerate(zip(levels, likes)):
+                    mass = pk * w * like
+                    total += mass
+                    if self.claims[claim_id].holds_at(level):
+                        holds += mass
+            joint.append((total, holds / total if total else 0.0))
+        norm = sum(chance for chance, _ in joint)
+        after = sum(chance / norm * entropy(p) for chance, p in joint)
+        return entropy(self.probability(claim_id)) - after

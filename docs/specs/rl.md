@@ -43,7 +43,7 @@ REINFORCE with a running-average baseline and an entropy bonus:
 ```
 for each episode:
     sample a simulated person (pack.sample_case) and play a full session with explore=True
-    reward = episode_reward(session, truth)          # +1 / -0.25 / -1, minus 0.02 per question
+    reward = episode_reward(session, truth)          # +1 / -0.25 / -3, minus 0.02 per question
     loss   = -(reward - baseline) * sum(log_probs) - entropy_bonus * sum(entropies)
     Adam step; baseline = 0.95 * baseline + 0.05 * reward
 ```

@@ -70,9 +70,10 @@ Plays the CV pack's three prompts so simulations run the full LLM path without a
 Use it with `--mock-llm` on `verity evaluate` and `verity train`.
 
 ## `answers.jsonl` rows (CV)
-`{case, split, skill, question_id, level, difficulty, quality, answer}`: each persona answering
-each bank question of its skills as a first question (no fatigue). Used to fit question
-parameters and to measure graders.
+`{case, split, skill, question_id, level, position, difficulty, quality, answer}`: each persona
+answering each bank question of its skills at a random position 0–11 in a session (so fatigue
+applies). Used to fit question parameters, fatigue, person spread and the over-claiming base rate,
+and to measure graders.
 
 ## Using the dataset
 | Command | What it does |

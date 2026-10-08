@@ -6,8 +6,9 @@ from .types import REFUTED, SUPPORTED, UNCERTAIN
 NOT_SURE = "I'm not sure."
 
 # Reward for the final verdict, used by training and by `verity evaluate`.
-# "Uncertain" is mildly negative: ending without an answer is a (small) failure.
-VERDICT_REWARD = {"correct": 1.0, "uncertain": -0.25, "wrong": -1.0}
+# A wrong verdict (e.g. telling a real senior "you are not senior") costs three times what a
+# correct one earns; ending "not sure yet" is a small failure. See docs/modeling.md.
+VERDICT_REWARD = {"correct": 1.0, "uncertain": -0.25, "wrong": -3.0}
 QUESTION_COST = 0.02     # subtracted per question asked
 
 

@@ -73,12 +73,26 @@ Overall: `refuted` if any claim is refuted; `supported` if all are supported; ot
 
 ## Belief model (`belief.py`)
 
-Per claim, a probability for every level. Start (`prior_for`): `prior` (default 0.5) spread
-evenly over the levels where the claim holds, `1 - prior` over the levels below it
-(yes/no: `[1 - prior, prior]`; a claim at level 0 starts uniform).
+`BeliefModel(prior=0.5, accept=0.9, reject=0.1, score_noise=0.2, person_spread=0.0, fatigue=0.0, gap_prior=None)`.
+The full mathematics is in [../modeling.md](../modeling.md).
+
+Per claim, a probability for every level. Start (`prior_for`):
+- with `gap_prior` (`{real - claimed: probability}`): each level gets the base rate of its gap
+  to the claimed level + 0.01, renormalised;
+- otherwise `prior` spread evenly over the levels where the claim holds, `1 - prior` over the
+  levels below (yes/no: `[1 - prior, prior]`; a claim at level 0 starts uniform).
+
+**Person factor.** A hidden offset δ (levels) shared by every claim of the session, on a grid of
+7 points from −2·`person_spread` to +2·`person_spread` with normal prior weights (one point at 0
+when `person_spread` is 0). Level weights are kept per grid point; each answer also re-weighs
+the grid points by how well they explain it.
+
+**Fatigue.** After `answered` questions, a person performs as if `fatigue × answered` levels lower.
+Expected scores at fractional positions use straight-line interpolation of `pass_rates` (`rate_at`).
 
 After an observation with score `s` on a probe with pass rates `r` (rates clamped to
-`[0.01, 0.99]`), each level's weight is multiplied by the likelihood of `s` at that level:
+`[0.01, 0.99]`), for every person offset δ each level's weight is multiplied by the likelihood of
+`s` at position `level + δ − fatigue × answered`:
 
 - multiple-choice probe: `r[level] ** s * (1 - r[level]) ** (1 - s)` (= `r` for a pass, `1 - r` for a fail);
 - free-text probe: `exp(-(s - r[level])² / (2 · score_noise²))`: `r[level]` is the expected score
@@ -87,7 +101,9 @@ After an observation with score `s` on a probe with pass rates `r` (rates clampe
 Then weights are renormalised, given a floor of 0.001 and renormalised again so no level is
 ever ruled out by one answer. See decision 0006.
 
+- `level_weights(claim_id)`: level probabilities averaged over the person offsets.
 - `probability(claim_id)`: total weight on levels where the claim holds.
+- `person_offset()`: expected person offset.
 - `level(claim_id)`: most likely level.
 - `status`: `supported` if `p >= accept`, `refuted` if `p <= reject`, else `uncertain`.
 - `expected_gain(probe)`: expected drop in entropy (bits) of "the claim holds" from asking the probe,
@@ -116,10 +132,13 @@ The UI renders them as the start form; their values arrive as `inputs[name]` (st
 
 ## Fitting (`fitting.py`)
 
-`fit_item(observations, n_levels)`: for answers `(level, score)` to one question, the
-`(difficulty, discrimination)` of `irt_pass_rates` that maximises
-`Σ score·log r + (1 − score)·log(1 − r)`, found by grid search (difficulty −1..n_levels in 0.1
-steps; discrimination 0.8, 1.2, 1.7, 2.4, 3.2).
+All fits maximise `Σ score·log r + (1 − score)·log(1 − r)` by grid search.
+- `fit_item(observations, n_levels)`: observations `(position, score)`; returns
+  `(difficulty, discrimination)` (difficulty −1..n_levels in 0.1 steps; discrimination 0.8–3.2).
+- `fit_person_offset(answers, fatigue)`: one person's offset (−1.5..1.5 in 0.1 steps).
+- `fit_fatigue(people)`: drift per question (0..0.08), each person with their best offset.
+- `person_spread(people, fatigue)`: √cov of offsets estimated from two halves of each person's
+  answers (the covariance removes estimation noise).
 
 ## Simulation (`simulation.py`)
 
@@ -131,7 +150,8 @@ steps; discrimination 0.8, 1.2, 1.7, 2.4, 3.2).
   answering `probe.answer`; failing means a wrong choice, or "I'm not sure." for free text.
 - `run_episode(pack, policy, rng, case=None) -> (session, truth levels)`: plays a dataset case,
   or a fresh `pack.make_case(rng, 0)`; the respondent is `pack.respondent(truth, rng, case)`.
-- `episode_reward(session, truth)`: `+1` correct, `-0.25` uncertain, `-1` wrong, minus `0.02` per question.
+- `episode_reward(session, truth)`: `+1` correct, `-0.25` uncertain, `-3` wrong, minus `0.02` per question
+  (`VERDICT_REWARD`, `QUESTION_COST`).
 - `evaluate(pack, policy_name, episodes, seed, cases=None)` → accuracy, uncertain, wrong,
   avg_questions, reward. With `cases`, plays each case once.
 - Datasets: see [dataset.md](dataset.md).
